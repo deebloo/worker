@@ -1,0 +1,24 @@
+{
+  "name": "worker",
+  "version": "0.0.1",
+  "homepage": "https://github.com/deebloo/webworkers",
+  "authors": [
+    "dannybluedesign@gmail.com"
+  ],
+  "description": "a tiny micro library to make using web workers easier",
+  "main": "./src/web-worker.js",
+  "keywords": [
+    "webworker",
+    "web",
+    "worker",
+    "library"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
