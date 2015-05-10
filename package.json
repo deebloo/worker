@@ -1,0 +1,22 @@
+{
+  "name": "worker",
+  "version": "0.0.1",
+  "description": "a tiny micro library to make using web workers easier",
+  "main": "./src/web-worker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deebloo/workers.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/workers/issues"
+  },
+  "homepage": "https://github.com/deebloo/workers",
+  "scripts": {
+    "uglifyjs": "uglifyjs ./src/web-worker.js -o ./dist/web-worker.min.js --compress --mangle"
+  }
+}
