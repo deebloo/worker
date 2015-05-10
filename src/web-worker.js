@@ -49,7 +49,7 @@ function $worker(method, fb) {
       };
     }
     else {
-      if(typeof fb !== 'function') {
+      if(typeof fb === 'function') {
         fb(data);
       }
       else {
