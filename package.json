@@ -4,7 +4,7 @@
   "description": "a tiny micro library to make using web workers easier",
   "main": "./src/web-worker.js",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma run",
+    "test": "./node_modules/karma/bin/karma start",
     "uglify": "./node_modules/uglifyjs/bin/uglifyjs ./src/web-worker.js -o ./dist/web-worker.min.js --compress --mangle"
   },
   "repository": {
