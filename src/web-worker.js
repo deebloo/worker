@@ -18,7 +18,7 @@ function $worker(func, fb) {
   // does the browser support web workers
   var hasWorkers = !!window.Worker;
 
-  if(blob) {
+  if(hasWorkers) {
     // Create blob from the passed in function
     blob = new Blob(blobArray, { type: "text/javascript" });
 
