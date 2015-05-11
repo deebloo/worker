@@ -98,5 +98,29 @@ function goodbye() {
 }
 ```
 
+### Complete Example
+```JS
+var myWorker = $worker(function(e) {
+  var foo = [], min = e.data.min, max = e.data.max;
+  
+  for (var i = 0; i < e.data.length; i++) {
+    foo.push(Math.floor(Math.random() * (max - min)) + min);
+  }
+  
+  // function passed in from the loadScripts api
+  hello();
+
+  self.postMessage(foo);
+});
+
+myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
+
+myWorker.onmessage = function(data) {
+  result = data;
+};
+
+myWorker.postMessage({length: 1024, min: 0, max: 9999});
+```
+
 
 
