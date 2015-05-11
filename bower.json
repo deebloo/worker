@@ -1,6 +1,6 @@
 {
   "name": "worker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/deebloo/webworkers",
   "authors": [
     "dannybluedesign@gmail.com"
@@ -15,12 +15,10 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components",
     "test",
     "tests",
-    "spec",
-    "jasmine-standalone-2.3.2"
+    "spec"
   ]
 }

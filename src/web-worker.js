@@ -16,7 +16,7 @@ function $worker(func, fb) {
   var blobArray = ['self.onmessage = ', func, ';'];
 
   // does the browser support web workers
-  var hasWorkers = !!window.Worker;
+  var hasWorkers = !window.Worker;
 
   if(blob) {
     // Create blob from the passed in function
