@@ -33,10 +33,10 @@ myWorker.postMessage([1,2,3,4,5]);
 #### $worker
 factory - creates a new web worker
 
-| Day     | Meal    | Price |
+| Arg     | Type    | desctiption |
 | --------|---------|-------|
-| Monday  | pasta   | $6    |
-| Tuesday | chicken | $8    |
+| func  | Function   | the code to be used in the web worker    |
+| fb | Function | the fallback function to use in case of webworker creation failure    |
 
 
 
