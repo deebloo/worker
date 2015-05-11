@@ -2,8 +2,7 @@
 
 A tiny micro library to help make using web workers easier. Spins up an inline web worker for you with the option of adding a fallback method in case creating the worker fails. The API for interacting with a web worker remains exactly the same, it is just the creation that is more abstracted.
 
-For more info on web workers.
-https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+For more info on web workers look (https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)[here]
 
 ### Install
 
