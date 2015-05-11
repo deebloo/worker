@@ -8,7 +8,7 @@ A tiny micro library to help make using web workers easier. Spins up an inline w
 bower install --save worker
 ```
 
-### usage
+### basic usage
 
 ```JS
 var myWorker = $worker(function(e) {
@@ -28,7 +28,15 @@ myWorker.onmessage = function(data) {
 myWorker.postMessage([1,2,3,4,5]);
 ```
 
+### api
 
+#### $worker
+factory - creates a new web worker
+
+| Day     | Meal    | Price |
+| --------|---------|-------|
+| Monday  | pasta   | $6    |
+| Tuesday | chicken | $8    |
 
 
 
