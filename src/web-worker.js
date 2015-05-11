@@ -13,14 +13,18 @@ function $worker(func, fb) {
   // Array to be used for the blob sent to the web worker
   var blobArray = ['self.onmessage = ', func, ';'];
 
-  // Create blob from the passed in function
-  var blob = !!window.Blob ? new Blob(blobArray, { type: "text/javascript" }) : null;
-
   // does the browser support web workers
   var hasWorkers = !!window.Worker;
 
-  // Create new web worker. This worker will be referred to as 'shell' from now on
-  var shell = hasWorkers ? new Worker(window.URL.createObjectURL(blob)) : null;
+  var blob, shell;
+
+  if(blob) {
+    // Create blob from the passed in function
+    blob = new Blob(blobArray, { type: "text/javascript" });
+
+    // Create new web worker. This worker will be referred to as 'shell' from now on
+    shell = new Worker(window.URL.createObjectURL(blob));
+  }
 
   return {
     postMessage : postMessage,
@@ -53,7 +57,7 @@ function $worker(func, fb) {
     }
     else {
       if(typeof fb === 'function') {
-        fb(data);
+        worker.onmessage(fb(data));
       }
       else {
         throw 'web workers are not supported in your current browser';
