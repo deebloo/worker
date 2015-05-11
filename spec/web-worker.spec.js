@@ -9,8 +9,12 @@ describe('worker: create big array', function() {
         foo.push(Math.floor(Math.random() * (max - min)) + min);
       }
 
+      hello();
+
       self.postMessage(foo);
     });
+
+    myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
 
     myWorker.onmessage = function(data) {
       result = data;
@@ -18,6 +22,10 @@ describe('worker: create big array', function() {
     };
 
     myWorker.postMessage({length: 1024, min: 0, max: 9999});
+  });
+
+  afterEach(function() {
+    myWorker.terminate();
   });
 
   it('should create a big array', function() {

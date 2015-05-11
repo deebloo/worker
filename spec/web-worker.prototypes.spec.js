@@ -9,8 +9,12 @@ describe('worker.prototypes: create big array', function() {
         foo.push(Math.floor(Math.random() * (max - min)) + min);
       }
 
+      hello();
+
       self.postMessage(foo);
     });
+
+    myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
 
     myWorker.onmessage = function(data) {
       result = data;

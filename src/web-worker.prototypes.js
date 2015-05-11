@@ -10,17 +10,21 @@
  * @constructor
  */
 function $Worker(method, fb) {
+  this.method = method;
+
+  this.fb = fb;
+
+  // Array to be used for the blob sent to the web worker
+  this.blobArray = ['self.onmessage = ', method.toString(), ';'];
+
   // Create blob from the passed in function
-  var blob = new Blob(['self.onmessage = ' + method.toString()], {
-    type: "text/javascript"
-  });
+  this.blob = new Blob(this.blobArray, { type: "text/javascript" });
 
-  // Create new web worker. This worker will be referred to as '_shell' from now on
-  this._shell = new Worker(window.URL.createObjectURL(blob));
+  // does the browser support web workers
+  this.hasWorkers = !!window.Worker;
 
-  this._method = method;
-
-  this._fb = fb;
+  // Create new web worker. This worker will be referred to as 'shell' from now on
+  this.shell = this.hasWorkers ? new Worker(window.URL.createObjectURL(this.blob)) : method;
 }
 
 /**
@@ -36,18 +40,18 @@ function $Worker(method, fb) {
 $Worker.prototype.postMessage = function postMessage(data) {
   var worker = this;
 
-  if(!!window.Worker) {
+  if(worker.hasWorkers) {
     window.URL = window.URL || window.webkitURL;
 
-    worker._shell.postMessage(data);
+    worker.shell.postMessage(data);
 
-    worker._shell.onmessage = function(res) {
+    worker.shell.onmessage = function(res) {
       worker.onmessage(res.data);
     };
   }
   else {
-    if(typeof this._fb === 'function') {
-      this._fb(data);
+    if(typeof worker.fb === 'function') {
+      worker.fb(data);
     }
     else {
       throw 'web workers are not supported in your current browser';
@@ -77,4 +81,28 @@ $Worker.prototype.terminate = function terminate() {
   var worker = this;
 
   worker._shell.terminate();
+};
+
+
+/**
+ * @name loadScripts
+ *
+ * @memberof $worker
+ *
+ * @description
+ *
+ */
+$Worker.prototype.loadScripts = function loadScripts() {
+  var funcs = arguments, worker = this;
+
+  for(var i = 0, len = funcs.length; i < len; i++) {
+    worker.blobArray.push(funcs[i].toString());
+  }
+
+  worker.blob = new Blob(worker.blobArray, {
+    type: "text/javascript"
+  });
+
+  // Create new web worker. This worker will be referred to as 'shell' from now on
+  worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
 };

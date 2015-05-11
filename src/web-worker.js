@@ -2,28 +2,33 @@
  * @name $worker
  *
  * @param {Function} method
- * @param {Function} [fb]
+ * @param {Array} [fb]
  *
  * @description
  * spin up an inline web worker.
  *
- * @return {{run: *, onmessage: *}}
+ * @return {{postMessage: $worker.postMessage, onmessage: $worker.onmessage, terminate: $worker.terminate}}
  */
 function $worker(method, fb) {
+  // Array to be used for the blob sent to the web worker
+  var blobArray = ['self.onmessage = ', method.toString(), ';'];
+
   // Create blob from the passed in function
-  var blob = new Blob(['self.onmessage = ' + method.toString()], {
+  var blob = new Blob(blobArray, {
     type: "text/javascript"
   });
 
+  // does the browser support web workers
+  var hasWorkers = !!window.Worker;
+
   // Create new web worker. This worker will be referred to as 'shell' from now on
-  var shell = new Worker(window.URL.createObjectURL(blob));
+  var shell = hasWorkers ? new Worker(window.URL.createObjectURL(blob)) : method;
 
   return {
-    _method     : method,
-    _shell      : shell,
     postMessage : postMessage,
     onmessage   : onmessage,
-    terminate   : terminate
+    terminate   : terminate,
+    loadScripts : loadScripts
   };
 
   /**
@@ -39,12 +44,12 @@ function $worker(method, fb) {
   function postMessage(data) {
     var worker = this;
 
-    if(!!window.Worker) {
+    if(hasWorkers) {
       window.URL = window.URL || window.webkitURL;
 
-      worker._shell.postMessage(data);
+      shell.postMessage(data);
 
-      worker._shell.onmessage = function(res) {
+      shell.onmessage = function(res) {
         worker.onmessage(res.data);
       };
     }
@@ -77,8 +82,29 @@ function $worker(method, fb) {
    * terminate the created web worker
    */
   function terminate() {
-    var worker = this;
+    shell.terminate();
+  }
 
-    worker._shell.terminate();
+  /**
+   * @name loadScripts
+   *
+   * @memberof $worker
+   *
+   * @description
+   * load function declarations into the web worker to be used by the web worker
+   */
+  function loadScripts() {
+    var funcs = arguments;
+
+    for(var i = 0, len = funcs.length; i < len; i++) {
+      blobArray.push(funcs[i].toString());
+    }
+
+    blob = new Blob(blobArray, {
+      type: "text/javascript"
+    });
+
+    // Create new web worker. This worker will be referred to as 'shell' from now on
+    shell = new Worker(window.URL.createObjectURL(blob));
   }
 }
