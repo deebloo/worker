@@ -10,13 +10,13 @@
  * @return {{postMessage: $worker.postMessage, onmessage: $worker.onmessage, terminate: $worker.terminate}}
  */
 function $worker(func, fb) {
+  var blob, shell;
+
   // Array to be used for the blob sent to the web worker
   var blobArray = ['self.onmessage = ', func, ';'];
 
   // does the browser support web workers
   var hasWorkers = !!window.Worker;
-
-  var blob, shell;
 
   if(blob) {
     // Create blob from the passed in function

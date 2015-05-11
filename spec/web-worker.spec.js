@@ -12,7 +12,7 @@ describe('worker: create big array', function() {
       hello();
 
       self.postMessage(foo);
-    });
+    }, function() { return new Array(1024)});
 
     myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
 
