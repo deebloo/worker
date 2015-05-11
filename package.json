@@ -4,7 +4,8 @@
   "description": "a tiny micro library to make using web workers easier",
   "main": "./src/web-worker.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/karma/bin/karma run",
+    "uglify": "./node_modules/uglifyjs/bin/uglifyjs ./src/web-worker.js -o ./dist/web-worker.min.js --compress --mangle"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,12 @@
     "url": "https://github.com/deebloo/workers/issues"
   },
   "homepage": "https://github.com/deebloo/workers",
-  "scripts": {
-    "uglifyjs": "uglifyjs ./src/web-worker.js -o ./dist/web-worker.min.js --compress --mangle"
+  "devDependencies": {
+    "jasmine-core": "^2.3.2",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.10",
+    "karma-jasmine": "^0.3.5",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "uglifyjs": "^2.4.10"
   }
 }

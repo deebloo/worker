@@ -1,8 +1,8 @@
 /**
  * @name $Worker
  *
- * @param {Function} method
- * @param {Function} [fb]
+ * @param {Function} method - the web worker code to be run
+ * @param {Function} [fb] - the fallback method to use if the web worker fails
  *
  * @description
  * spin up an inline web worker.
@@ -10,21 +10,23 @@
  * @constructor
  */
 function $Worker(method, fb) {
-  this.method = method;
+  var worker = this;
 
-  this.fb = fb;
+  worker.method = method;
+
+  worker.fb = fb;
 
   // Array to be used for the blob sent to the web worker
-  this.blobArray = ['self.onmessage = ', method.toString(), ';'];
+  worker.blobArray = ['self.onmessage = ', worker.method.toString(), ';'];
 
   // Create blob from the passed in function
-  this.blob = new Blob(this.blobArray, { type: "text/javascript" });
+  worker.blob = new Blob(worker.blobArray, { type: "text/javascript" });
 
   // does the browser support web workers
-  this.hasWorkers = !!window.Worker;
+  worker.hasWorkers = !!window.Worker;
 
   // Create new web worker. This worker will be referred to as 'shell' from now on
-  this.shell = this.hasWorkers ? new Worker(window.URL.createObjectURL(this.blob)) : method;
+  worker.shell = worker.hasWorkers ? new Worker(window.URL.createObjectURL(worker.blob)) : method;
 }
 
 /**
@@ -90,7 +92,7 @@ $Worker.prototype.terminate = function terminate() {
  * @memberof $worker
  *
  * @description
- *
+ * load named function declarations into the web worker to be used by the web worker
  */
 $Worker.prototype.loadScripts = function loadScripts() {
   var funcs = arguments, worker = this;

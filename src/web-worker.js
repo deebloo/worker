@@ -2,7 +2,7 @@
  * @name $worker
  *
  * @param {Function} method
- * @param {Array} [fb]
+ * @param {Function} [fb]
  *
  * @description
  * spin up an inline web worker.
@@ -14,15 +14,13 @@ function $worker(method, fb) {
   var blobArray = ['self.onmessage = ', method.toString(), ';'];
 
   // Create blob from the passed in function
-  var blob = new Blob(blobArray, {
-    type: "text/javascript"
-  });
+  var blob = !!window.Blob ? new Blob(blobArray, { type: "text/javascript" }) : null;
 
   // does the browser support web workers
   var hasWorkers = !!window.Worker;
 
   // Create new web worker. This worker will be referred to as 'shell' from now on
-  var shell = hasWorkers ? new Worker(window.URL.createObjectURL(blob)) : method;
+  var shell = hasWorkers ? new Worker(window.URL.createObjectURL(blob)) : null;
 
   return {
     postMessage : postMessage,
@@ -91,13 +89,13 @@ function $worker(method, fb) {
    * @memberof $worker
    *
    * @description
-   * load function declarations into the web worker to be used by the web worker
+   * load named function declarations into the web worker to be used by the web worker
    */
   function loadScripts() {
     var funcs = arguments;
 
     for(var i = 0, len = funcs.length; i < len; i++) {
-      blobArray.push(funcs[i].toString());
+      blobArray.push(funcs[i]);
     }
 
     blob = new Blob(blobArray, {
