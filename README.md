@@ -40,6 +40,19 @@ factory - creates a new web worker
 | func  | Function   | the code to be used in the web worker    |
 | fb | Function | the fallback function to use in case of webworker creation failure    |
 
+Example:
+```JS
+var myWorker = $worker(function(e) {
+  var sum = 0;
+  
+  e.data.forEach(function(int) {
+    sum += int;
+  });
+  
+  self.postMessage(sum);
+});
+```
+
 #### $worker.postMessage
 Post data for the web worker to use. Runs the web worker
 
@@ -47,12 +60,43 @@ Post data for the web worker to use. Runs the web worker
 | --------|---------|-------|
 | data  | * | the data to be posted (cannot be function)  |
 
+Example:
+```JS
+myWorker.postMessage([1,2,3,4,5]);
+```
+
 #### $worker.onmessage
 Override this method. This method is called whenever your $worker posts data back.
 
 | Arg     | Type    | desctiption |
 | --------|---------|-------|
+| data  | * | the data that is posted back from the worker|
+
+Example:
+```JS
+myWorker.onmessage = function(data) {
+  console.log(data);
+};
+```
+
+#### $worker.loadScripts
+Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of NAMED function declarations into the web worker that can be used by the worker
+
+| Arg     | Type    | desctiption |
+| --------|---------|-------|
 | data  | * | the data to be posted (cannot be function)  |
+
+```JS
+myWorker.loadScripts(function hello() { console.log('hello world'); }, );
+
+function hello() {
+  console.log('Hello World');
+}
+
+function goodbye() {
+  console.log('Goodbye World');
+}
+```
 
 
 
