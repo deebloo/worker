@@ -19,7 +19,7 @@ function $Worker(method, fb) {
   worker.blobArray = ['self.onmessage = ', method, ';'];
 
   // Create blob from the passed in function
-  worker.blob = !!window.Blob ? new Blob(blobArray, { type: "text/javascript" }) : null;
+  worker.blob = !!window.Blob ? new Blob(worker.blobArray, { type: "text/javascript" }) : null;
 
   // does the browser support web workers
   worker.hasWorkers = !!window.Worker;

@@ -1,7 +1,7 @@
 /**
  * @name $worker
  *
- * @param {Function} method
+ * @param {Function} func
  * @param {Function} [fb]
  *
  * @description
@@ -9,9 +9,9 @@
  *
  * @return {{postMessage: $worker.postMessage, onmessage: $worker.onmessage, terminate: $worker.terminate}}
  */
-function $worker(method, fb) {
+function $worker(func, fb) {
   // Array to be used for the blob sent to the web worker
-  var blobArray = ['self.onmessage = ', method, ';'];
+  var blobArray = ['self.onmessage = ', func, ';'];
 
   // Create blob from the passed in function
   var blob = !!window.Blob ? new Blob(blobArray, { type: "text/javascript" }) : null;
@@ -67,7 +67,7 @@ function $worker(method, fb) {
    * @memberof $worker
    *
    * @description
-   * override this method to when listening for the worker to complete
+   * override this func to when listening for the worker to complete
    */
   function onmessage() { }
 
