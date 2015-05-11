@@ -84,7 +84,7 @@ Sometimes you need to load functions into your worker. $worker.loadScripts loads
 
 | Arg     | Type    | desctiption |
 | --------|---------|-------|
-| data  | * | the data to be posted (cannot be function)  |
+| data  | Function | A list of functions to be loaded into the web worker to be used.  |
 
 ```JS
 myWorker.loadScripts(function hello() { console.log('hello world'); }, );
