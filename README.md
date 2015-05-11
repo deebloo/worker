@@ -87,7 +87,7 @@ Sometimes you need to load functions into your worker. $worker.loadScripts loads
 | data  | Function | A list of functions to be loaded into the web worker to be used.  |
 
 ```JS
-myWorker.loadScripts(function hello() { console.log('hello world'); }, );
+myWorker.loadScripts(hello, goodbye);
 
 function hello() {
   console.log('Hello World');
