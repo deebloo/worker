@@ -11,7 +11,7 @@
  */
 function $worker(method, fb) {
   // Array to be used for the blob sent to the web worker
-  var blobArray = ['self.onmessage = ', method.toString(), ';'];
+  var blobArray = ['self.onmessage = ', method, ';'];
 
   // Create blob from the passed in function
   var blob = !!window.Blob ? new Blob(blobArray, { type: "text/javascript" }) : null;

@@ -26,6 +26,8 @@ describe('worker: create big array', function() {
 
   afterEach(function() {
     myWorker.terminate();
+    myWorker = null;
+    result = null;
   });
 
   it('should create a big array', function() {

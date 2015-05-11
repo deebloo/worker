@@ -12,15 +12,14 @@
 function $Worker(method, fb) {
   var worker = this;
 
-  worker.method = method;
-
+  // The fallback method to use if web worker failts
   worker.fb = fb;
 
   // Array to be used for the blob sent to the web worker
-  worker.blobArray = ['self.onmessage = ', worker.method.toString(), ';'];
+  worker.blobArray = ['self.onmessage = ', method, ';'];
 
   // Create blob from the passed in function
-  worker.blob = new Blob(worker.blobArray, { type: "text/javascript" });
+  worker.blob = !!window.Blob ? new Blob(blobArray, { type: "text/javascript" }) : null;
 
   // does the browser support web workers
   worker.hasWorkers = !!window.Worker;
