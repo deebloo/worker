@@ -1,6 +1,6 @@
 {
   "name": "worker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/deebloo/webworkers",
   "authors": [
     "dannybluedesign@gmail.com"
