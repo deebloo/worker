@@ -12,26 +12,34 @@
 function $Worker(method, fb) {
   var worker = this;
 
-  // The fallback method to use if web worker failts
+  // The fallback method to use if web worker fails
   worker.fb = fb;
-
-  // Array to be used for the blob sent to the web worker
-  worker.blobArray = ['self.onmessage = ', method, ';'];
-
-  // Create blob from the passed in function
-  worker.blob = !!window.Blob ? new Blob(worker.blobArray, { type: "text/javascript" }) : null;
 
   // does the browser support web workers
   worker.hasWorkers = !!window.Worker;
 
-  // Create new web worker. This worker will be referred to as 'shell' from now on
-  worker.shell = worker.hasWorkers ? new Worker(window.URL.createObjectURL(worker.blob)) : method;
+  // placeholder fo blob
+  worker.blob = null;
+
+  // placeholder for shell
+  worker.shell = null;
+
+  // Array to be used for the blob sent to the web worker
+  worker.blobArray = ['self.onmessage = ', method, ';'];
+
+  if(worker.hasWorkers) {
+    // Create blob from the passed in function
+    worker.blob = new Blob(worker.blobArray, { type: "text/javascript" });
+
+    // Create new web worker. This worker will be referred to as 'shell' from now on
+    worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
+  }
 }
 
 /**
- * @name run
+ * @name postMessage
  *
- * @memberof $worker
+ * @memberof $Worker
  *
  * @description
  * run the created web worker
@@ -63,7 +71,7 @@ $Worker.prototype.postMessage = function postMessage(data) {
 /**
  * @name onmessage
  *
- * @memberof $worker
+ * @memberof $Worker
  *
  * @description
  * override this method to when listening for the worker to complete
@@ -73,7 +81,7 @@ $Worker.prototype.onmessage = function onmessage() { };
 /**
  * @name terminate
  *
- * @memberof $worker
+ * @memberof $Worker
  *
  * @description
  * terminate the created web worker
@@ -81,28 +89,27 @@ $Worker.prototype.onmessage = function onmessage() { };
 $Worker.prototype.terminate = function terminate() {
   var worker = this;
 
-  worker._shell.terminate();
+  worker.shell.terminate();
 };
 
 
 /**
  * @name loadScripts
  *
- * @memberof $worker
+ * @memberof $Worker
+ * @memberof $Worker
  *
  * @description
  * load named function declarations into the web worker to be used by the web worker
  */
 $Worker.prototype.loadScripts = function loadScripts() {
-  var funcs = arguments, worker = this;
+  var worker = this;
 
-  for(var i = 0, len = funcs.length; i < len; i++) {
-    worker.blobArray.push(funcs[i].toString());
+  for(var i = 0, len = arguments.length; i < len; i++) {
+    worker.blobArray.push(arguments[i]);
   }
 
-  worker.blob = new Blob(worker.blobArray, {
-    type: "text/javascript"
-  });
+  worker.blob = new Blob(worker.blobArray, { type: "text/javascript"});
 
   // Create new web worker. This worker will be referred to as 'shell' from now on
   worker.shell = new Worker(window.URL.createObjectURL(worker.blob));

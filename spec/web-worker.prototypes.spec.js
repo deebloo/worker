@@ -2,11 +2,14 @@ describe('worker.prototypes: create big array', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
+
+    var hello = function hello() { console.log('hello world'); };
+
     myWorker = new $Worker(function(e) {
       var foo = [], min = e.data.min, max = e.data.max;
 
       for (var i = 0; i < e.data.length; i++) {
-        foo.push(Math.floor(Math.random() * (max - min)) + min);
+        foo.push(Math.floor(Math.random() * (maxa - min)) + min);
       }
 
       hello();
@@ -14,7 +17,7 @@ describe('worker.prototypes: create big array', function() {
       self.postMessage(foo);
     });
 
-    myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
+    myWorker.loadScripts(hello);
 
     myWorker.onmessage = function(data) {
       result = data;
@@ -22,6 +25,12 @@ describe('worker.prototypes: create big array', function() {
     };
 
     myWorker.postMessage({length: 1024, min: 0, max: 9999});
+  });
+
+  afterEach(function() {
+    myWorker.terminate();
+    myWorker = null;
+    result = null;
   });
 
   it('should create a big array', function() {

@@ -26,7 +26,7 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'Firefox'],
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

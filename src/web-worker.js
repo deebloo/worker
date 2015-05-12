@@ -34,7 +34,7 @@ function $worker(func, fb) {
   };
 
   /**
-   * @name run
+   * @name postMessage
    *
    * @memberof $worker
    *
@@ -96,17 +96,12 @@ function $worker(func, fb) {
    * load named function declarations into the web worker to be used by the web worker
    */
   function loadScripts() {
-    var funcs = arguments;
-
-    for(var i = 0, len = funcs.length; i < len; i++) {
-      blobArray.push(funcs[i]);
+    for(var i = 0, len = arguments.length; i < len; i++) {
+      blobArray.push(arguments[i]);
     }
 
-    blob = new Blob(blobArray, {
-      type: "text/javascript"
-    });
+    blob = new Blob(blobArray, { type: "text/javascript" });
 
-    // Create new web worker. This worker will be referred to as 'shell' from now on
     shell = new Worker(window.URL.createObjectURL(blob));
   }
 }

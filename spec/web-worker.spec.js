@@ -2,6 +2,9 @@ describe('worker: create big array', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
+
+    var hello = function hello() { console.log('hello world'); };
+
     myWorker = $worker(function(e) {
       var foo = [], min = e.data.min, max = e.data.max;
 
@@ -14,7 +17,7 @@ describe('worker: create big array', function() {
       self.postMessage(foo);
     });
 
-    myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
+    myWorker.loadScripts(hello);
 
     myWorker.onmessage = function(data) {
       result = data;

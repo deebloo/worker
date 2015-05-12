@@ -21,6 +21,7 @@
     "jasmine-core": "^2.3.2",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.10",
+    "karma-firefox-launcher": "^0.1.6",
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "uglifyjs": "^2.4.10"
