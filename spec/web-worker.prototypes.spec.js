@@ -9,7 +9,7 @@ describe('worker.prototypes: create big array', function() {
       var foo = [], min = e.data.min, max = e.data.max;
 
       for (var i = 0; i < e.data.length; i++) {
-        foo.push(Math.floor(Math.random() * (maxa - min)) + min);
+        foo.push(Math.floor(Math.random() * (max - min)) + min);
       }
 
       hello();
