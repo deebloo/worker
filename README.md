@@ -113,7 +113,7 @@ var myWorker = $worker(function(e) {
   self.postMessage(foo);
 });
 
-myWorker.loadScripts(function hello() { console.log('hello world'); }, function foo() {});
+myWorker.loadScripts(function hello() { console.log('hello world'); });
 
 myWorker.onmessage = function(data) {
   result = data;
