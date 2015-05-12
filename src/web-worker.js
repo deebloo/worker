@@ -93,7 +93,7 @@ function $worker(func, fb) {
    * @memberof $worker
    *
    * @description
-   * load named function declarations into the web worker to be used by the web worker
+   * load named functions into the web worker to be used by the web worker
    */
   function loadScripts() {
     for(var i = 0, len = arguments.length; i < len; i++) {

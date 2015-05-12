@@ -100,7 +100,7 @@ $Worker.prototype.terminate = function terminate() {
  * @memberof $Worker
  *
  * @description
- * load named function declarations into the web worker to be used by the web worker
+ * load named functions into the web worker to be used by the web worker
  */
 $Worker.prototype.loadScripts = function loadScripts() {
   var worker = this;
