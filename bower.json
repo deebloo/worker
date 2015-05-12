@@ -6,7 +6,7 @@
     "dannybluedesign@gmail.com"
   ],
   "description": "a tiny micro library to make using web workers easier",
-  "main": "./dist/web-worker.min.js",
+  "main": "./src/web-worker.js",
   "keywords": [
     "webworker",
     "web",
