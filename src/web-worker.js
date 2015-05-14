@@ -36,6 +36,7 @@ function $Worker(method, fb, debug) {
   worker.errorHandler = errorHandler;
   worker.getBlobArray = getBlobArray;
   worker.updateBlobArray = updateBlobArray;
+  worker.removeFromBlobArray = removeFromBlobArray;
 
   /**
    * @name errorHandler
@@ -73,6 +74,18 @@ function $Worker(method, fb, debug) {
    */
   function updateBlobArray(val) {
     blobArray.unshift(val);
+  }
+
+  /**
+   * @name updateBlobArray
+   *
+   * @memberof $Worker
+   *
+   * @param {Number} idx - index to start at
+   * @param {Number} length - the number of items to remove
+   */
+  function removeFromBlobArray(idx, length) {
+    blobArray.splice(idx, length);
   }
 }
 
@@ -114,9 +127,7 @@ $Worker.prototype.postMessage = function postMessage(data) {
  * @description
  * override this method to when listening for the worker to complete
  */
-$Worker.prototype.onmessage = function onmessage(e) {
-  console.log(e);
-};
+$Worker.prototype.onmessage = function onmessage() { };
 
 /**
  * @name terminate
@@ -156,6 +167,30 @@ $Worker.prototype.loadScripts = function loadScripts() {
     worker.updateBlobArray(';');
     worker.updateBlobArray(currentMethod);
     worker.updateBlobArray('var ' + key + ' = ');
+  }
+
+  if(worker.hasWorkers) {
+    worker.blob = new Blob(worker.getBlobArray(), { type: "text/javascript"});
+
+    worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
+  }
+};
+
+/**
+ * @name removeScripts
+ *
+ * @memberof $Worker
+ *
+ * @description
+ * remove a previously loaded function from the worker
+ */
+$Worker.prototype.removeScripts = function removeScripts() {
+  var worker = this, array = worker.getBlobArray(), index;
+
+  for(var i = 0, len = arguments.length; i < len; i++) {
+    index = array.indexOf('var ' + arguments[i] + ' = ');
+
+    worker.removeFromBlobArray(index, 3);
   }
 
   if(worker.hasWorkers) {

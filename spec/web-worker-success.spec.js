@@ -2,7 +2,9 @@ describe('worker - success', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
-    var hello = function hello() { console.log('hello world'); };
+    var hello = function hello() { };
+
+    var goodbye = function goodbye() { };
 
     myWorker = new $Worker(function(e) {
       var foo = [], min = e.data.min, max = e.data.max;
@@ -16,10 +18,11 @@ describe('worker - success', function() {
       self.postMessage(foo);
     });
 
-    myWorker.loadScripts({'hello': hello});
+    myWorker.loadScripts({'hello': hello}, {'goodbye': goodbye});
 
     myWorker.onmessage = function(data) {
       result = data;
+
       done();
     };
 
@@ -27,6 +30,8 @@ describe('worker - success', function() {
   });
 
   afterEach(function() {
+    myWorker.removeScripts('hello', 'goodbye');
+
     myWorker.terminate();
     myWorker = null;
     result = null;
