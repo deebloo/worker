@@ -1,9 +1,7 @@
-describe('worker - success', function() {
+describe('worker - no listener', function() {
   var myWorker, result;
 
-  beforeEach(function(done) {
-    var hello = function hello() { console.log('hello world'); };
-
+  beforeEach(function() {
     myWorker = new $Worker(function(e) {
       var foo = [], min = e.data.min, max = e.data.max;
 
@@ -11,17 +9,8 @@ describe('worker - success', function() {
         foo.push(Math.floor(Math.random() * (max - min)) + min);
       }
 
-      hello();
-
       self.postMessage(foo);
     });
-
-    myWorker.loadScripts({'hello': hello});
-
-    myWorker.onmessage = function(data) {
-      result = data;
-      done();
-    };
 
     myWorker.postMessage({length: 1024, min: 0, max: 9999});
   });
@@ -33,6 +22,6 @@ describe('worker - success', function() {
   });
 
   it('should create a big array', function() {
-    expect(result.length).toBe(1024);
+
   });
 });

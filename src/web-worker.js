@@ -72,7 +72,7 @@ function $Worker(method, fb, debug) {
    * @param {*} val - the item to add to the blobd
    */
   function updateBlobArray(val) {
-    blobArray.push(val);
+    blobArray.unshift(val);
   }
 }
 
@@ -114,7 +114,9 @@ $Worker.prototype.postMessage = function postMessage(data) {
  * @description
  * override this method to when listening for the worker to complete
  */
-$Worker.prototype.onmessage = function onmessage() { };
+$Worker.prototype.onmessage = function onmessage(e) {
+  console.log(e);
+};
 
 /**
  * @name terminate
@@ -142,10 +144,18 @@ $Worker.prototype.terminate = function terminate() {
  * load named functions into the web worker to be used by the web worker
  */
 $Worker.prototype.loadScripts = function loadScripts() {
-  var worker = this;
+  var worker = this, current, currentMethod, key;
 
   for(var i = 0, len = arguments.length; i < len; i++) {
-    worker.updateBlobArray(arguments[i]);
+    current = arguments[i];
+
+    key = Object.keys(current)[0];
+
+    currentMethod = current[key];
+
+    worker.updateBlobArray(';');
+    worker.updateBlobArray(currentMethod);
+    worker.updateBlobArray('var ' + key + ' = ');
   }
 
   if(worker.hasWorkers) {
