@@ -1,8 +1,7 @@
-describe('worker.prototypes: create big array', function() {
+describe('worker - success', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
-
     var hello = function hello() { console.log('hello world'); };
 
     myWorker = new $Worker(function(e) {

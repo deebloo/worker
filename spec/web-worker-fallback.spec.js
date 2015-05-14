@@ -1,23 +1,20 @@
-describe('worker: create big array', function() {
+describe('worker - fallback', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
-
-    var hello = function hello() { console.log('hello world'); };
-
-    myWorker = $worker(function(e) {
+    var fallback = function(e) {
       var foo = [], min = e.data.min, max = e.data.max;
 
       for (var i = 0; i < e.data.length; i++) {
         foo.push(Math.floor(Math.random() * (max - min)) + min);
       }
 
-      hello();
+      return foo;
+    };
 
-      self.postMessage(foo);
-    });
+    myWorker = new $Worker(function(e) {
 
-    myWorker.loadScripts(hello);
+    }, fallback, true);
 
     myWorker.onmessage = function(data) {
       result = data;
