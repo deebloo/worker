@@ -100,7 +100,7 @@ function goodbye() {
 
 ### Complete Example
 ```JS
-var myWorker = $worker(function(e) {
+var myWorker = new $Worker(function(e) {
   var foo = [], min = e.data.min, max = e.data.max;
   
   for (var i = 0; i < e.data.length; i++) {
