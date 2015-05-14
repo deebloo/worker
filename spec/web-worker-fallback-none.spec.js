@@ -25,6 +25,7 @@ describe('worker - fallback', function() {
   });
 
   it('should create a big array', function() {
-    expect(error.message).toBeTruthy();
+    expect(error.code).toBe('0001');
+    expect(error.message).toBe('web workers are not supported in your current browser and no fallback has been given');
   });
 });
