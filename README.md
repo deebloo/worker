@@ -13,7 +13,7 @@ bower install --save worker
 ### Basic Usage
 
 ```JS
-var myWorker = $worker(function(e) {
+var myWorker = new $Worker(function(e) {
   var sum = 0;
   
   e.data.forEach(function(int) {
