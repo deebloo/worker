@@ -32,8 +32,8 @@ myWorker.postMessage([1,2,3,4,5]);
 
 ### API
 
-#### $worker
-factory - creates a new web worker
+#### $Worker
+Constructor - creates a new web worker
 
 | Arg     | Type    | desctiption |
 | --------|---------|-------|
@@ -53,7 +53,7 @@ var myWorker = new $Worker(function(e) {
 });
 ```
 
-#### $worker.postMessage
+#### $Worker.postMessage
 Post data for the web worker to use. Runs the web worker
 
 | Arg     | Type    | desctiption |
@@ -65,7 +65,7 @@ Example:
 myWorker.postMessage([1,2,3,4,5]);
 ```
 
-#### $worker.onmessage
+#### $Worker.onmessage
 Override this method. This method is called whenever your $worker posts data back.
 
 | Arg     | Type    | desctiption |
@@ -79,12 +79,12 @@ myWorker.onmessage = function(data) {
 };
 ```
 
-#### $worker.loadScripts
+#### $Worker.loadScripts
 Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of functions into the web worker that can be used by the worker
 
 | Arg     | Type    | desctiption |
 | --------|---------|-------|
-| data  | Function | A list of functions to be loaded into the web worker to be used.  |
+| *  | Function | A list of functions to be loaded into the web worker to be used.  |
 
 ```JS
 myWorker.loadScripts(hello, goodbye);
@@ -97,6 +97,7 @@ function goodbye() {
   console.log('Goodbye World');
 }
 ```
+
 
 ### Complete Example
 ```JS
