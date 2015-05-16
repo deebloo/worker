@@ -22,7 +22,6 @@ function $Worker(method, fb, debug) {
   worker.hasWorkers = debug ? false : !!window.Worker; // does the browser have workers
   worker.blob = null; // blob container
   worker.shell = null; // shell container
-
   worker.fb = fb;
 
   if(worker.hasWorkers) {
@@ -78,7 +77,7 @@ function $Worker(method, fb, debug) {
    * @param {Number} idx - index to start at
    * @param {Number} length - the number of items to remove
    */
-  worker.removeFromBlobArray =   function removeFromBlobArray(idx, length) {
+  worker.removeFromBlobArray = function removeFromBlobArray(idx, length) {
     blobArray.splice(idx, length);
   };
 }
