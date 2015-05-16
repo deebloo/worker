@@ -4,7 +4,7 @@
   "description": "a tiny micro library to make using web workers easier",
   "main": "./src/web-worker.js",
   "scripts": {
-    "start": "npm run docs && npm run test && npm run uglify",
+    "start": "./prepare.sh",
     "docs": "./node_modules/jsdoc/jsdoc.js src/ -d docs",
     "test": "./node_modules/karma/bin/karma start",
     "uglify": "./node_modules/uglifyjs/bin/uglifyjs ./src/web-worker.js -o ./dist/web-worker.min.js --compress --mangle"
@@ -23,6 +23,7 @@
     "jasmine-core": "^2.3.2",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.10",
+    "karma-coverage": "^0.3.1",
     "karma-firefox-launcher": "^0.1.6",
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.1.4",
