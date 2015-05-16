@@ -35,7 +35,7 @@ myWorker.postMessage([1,2,3,4,5]);
 #### $Worker
 Constructor - creates a new web worker
 
-| Arg     | Type    | desctiption |
+| Arg     | Type    | description |
 | --------|---------|-------|
 | func  | Function   | the code to be used in the web worker    |
 | fb | Function | the fallback function to use in case of webworker creation failure    |
@@ -56,7 +56,7 @@ var myWorker = new $Worker(function(e) {
 #### $Worker.postMessage
 Post data for the web worker to use. Runs the web worker
 
-| Arg     | Type    | desctiption |
+| Arg     | Type    | description |
 | --------|---------|-------|
 | data  | * | the data to be posted (cannot be function)  |
 
@@ -68,7 +68,7 @@ myWorker.postMessage([1,2,3,4,5]);
 #### $Worker.onmessage
 Override this method. This method is called whenever your $worker posts data back.
 
-| Arg     | Type    | desctiption |
+| Arg     | Type    | description |
 | --------|---------|-------|
 | data  | * | the data that is posted back from the worker|
 
@@ -82,12 +82,31 @@ myWorker.onmessage = function(data) {
 #### $Worker.loadScripts
 Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of functions into the web worker that can be used by the worker
 
-| Arg     | Type    | desctiption |
+| Arg     | Type    | description |
 | --------|---------|-------|
-| *  | Function | A list of functions to be loaded into the web worker to be used.  |
+| *  | Object | A map of functions and the name they should be stored under  |
 
 ```JS
-myWorker.loadScripts(hello, goodbye);
+myWorker.loadScripts({'hello', hello}, {'goodbye': goodbye});
+
+function hello() {
+  console.log('Hello World');
+}
+
+function goodbye() {
+  console.log('Goodbye World');
+}
+```
+
+#### $Worker.removeScripts
+Remove injected scripts from the web worker
+
+| Arg     | Type    | description |
+| --------|---------|-------|
+| *  | String | A list of function names to be removed.  |
+
+```JS
+myWorker.removeScripts('hello', 'goodbye');
 
 function hello() {
   console.log('Hello World');

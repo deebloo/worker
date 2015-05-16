@@ -14,7 +14,8 @@ function $Worker(method, fb, debug) {
   var worker = this;
 
   var errors = {
-    '0001': 'web workers are not supported in your current browser and no fallback has been given'
+    '0001': 'web workers are not supported in your current browser and no fallback has been given',
+    '0002': 'something went wrong with your worker'
   };
 
   var blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
@@ -35,7 +36,7 @@ function $Worker(method, fb, debug) {
    *
    * @memberof $Worker
    *
-   * @param {Function} code - the web worker code to be run
+   * @param {String} code - the web worker code to be run
    *
    * @description
    * spin up an embedded web worker.
@@ -132,7 +133,9 @@ $Worker.prototype.onmessage = function onmessage() { };
  * @description
  * override this method to when listening for worker errors
  */
-$Worker.prototype.onerror = function onerror() {};
+$Worker.prototype.onerror = function onerror() {
+  console.error(this.errorHandler('0002'));
+};
 
 /**
  * @name terminate

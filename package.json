@@ -21,6 +21,7 @@
   "homepage": "https://github.com/deebloo/workers",
   "devDependencies": {
     "jasmine-core": "^2.3.2",
+    "jsdoc": "^3.3.0",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.10",
     "karma-coverage": "^0.3.1",
