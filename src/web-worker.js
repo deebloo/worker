@@ -31,11 +31,6 @@ function $Worker(method, fb, debug) {
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
 
-  worker.errorHandler = errorHandler;
-  worker.getBlobArray = getBlobArray;
-  worker.updateBlobArray = updateBlobArray;
-  worker.removeFromBlobArray = removeFromBlobArray;
-
   /**
    * @name errorHandler
    *
@@ -46,12 +41,12 @@ function $Worker(method, fb, debug) {
    * @description
    * spin up an embedded web worker.
    */
-  function errorHandler(code) {
+  worker.errorHandler = function errorHandler(code) {
     return {
       code: code,
       message: errors[code]
     };
-  }
+  };
 
   /**
    * @name getBlobArray
@@ -60,9 +55,9 @@ function $Worker(method, fb, debug) {
    *
    * @return {Array}
    */
-  function getBlobArray() {
+  worker.getBlobArray = function getBlobArray() {
     return blobArray;
-  }
+  };
 
   /**
    * @name updateBlobArray
@@ -71,9 +66,9 @@ function $Worker(method, fb, debug) {
    *
    * @param {*} val - the item to add to the blobd
    */
-  function updateBlobArray(val) {
+  worker.updateBlobArray = function updateBlobArray(val) {
     blobArray.unshift(val);
-  }
+  };
 
   /**
    * @name updateBlobArray
@@ -83,9 +78,9 @@ function $Worker(method, fb, debug) {
    * @param {Number} idx - index to start at
    * @param {Number} length - the number of items to remove
    */
-  function removeFromBlobArray(idx, length) {
+  worker.removeFromBlobArray =   function removeFromBlobArray(idx, length) {
     blobArray.splice(idx, length);
-  }
+  };
 }
 
 /**
