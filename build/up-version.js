@@ -15,6 +15,13 @@ fs.readFile(files.package, function(err, data) {
   upVersion(files.package, err, data);
 });
 
+/**
+ * @name upVersion
+ *
+ * @param {String} writeTo
+ * @param {Object} err
+ * @param {Object} data
+ */
 function upVersion(writeTo, err, data) {
   var file, version;
 
