@@ -125,9 +125,7 @@ var $Worker = (function() {
 
     for(var i = 0, len = arguments.length; i < len; i++) {
       current = arguments[i];
-
       key = Object.keys(current)[0];
-
       currentMethod = current[key];
 
       blobArray.unshift(';');
