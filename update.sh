@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-Message=$1
-
 npm run docs
 npm run test
 npm run uglify
@@ -11,9 +9,7 @@ then
 node ./build/upversion.js $2
 fi
 
-echo "$Message"
-
 git pull
 git add -A
-git commit -m"$Message"
+git commit -m"$1"
 git push
