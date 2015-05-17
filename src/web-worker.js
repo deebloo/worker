@@ -13,11 +13,6 @@
 function $Worker(method, fb, debug) {
   var worker = this;
 
-  var errors = {
-    '0001': 'web workers are not supported in your current browser and no fallback has been given',
-    '0002': 'something went wrong with your worker'
-  };
-
   var blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
 
   worker.hasWorkers = debug ? false : !!window.Worker; // does the browser have workers
@@ -30,23 +25,6 @@ function $Worker(method, fb, debug) {
 
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
-
-  /**
-   * @name errorHandler
-   *
-   * @memberof $Worker
-   *
-   * @param {String} code - the web worker code to be run
-   *
-   * @description
-   * spin up an embedded web worker.
-   */
-  worker.errorHandler = function errorHandler(code) {
-    return {
-      code: code,
-      message: errors[code]
-    };
-  };
 
   /**
    * @name getBlobArray
@@ -110,7 +88,7 @@ $Worker.prototype.postMessage = function postMessage(data) {
       worker.onmessage(worker.fb({data: data}));
     }
     else {
-      worker.onmessage(worker.errorHandler('0001'));
+      worker.onmessage(worker.error('0001'));
     }
   }
 };
@@ -134,7 +112,7 @@ $Worker.prototype.onmessage = function onmessage() { };
  * override this method to when listening for worker errors
  */
 $Worker.prototype.onerror = function onerror() {
-  console.error(this.errorHandler('0002'));
+  console.error(this.error('0002'));
 };
 
 /**
@@ -207,3 +185,32 @@ $Worker.prototype.removeScripts = function removeScripts() {
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
 };
+
+/**
+ * @name error
+ *
+ * @memberof $Worker
+ *
+ * @param {String} code - the web worker code to be run
+ */
+$Worker.prototype.error = function error(code) {
+  return {
+    code: code,
+    message: this.errors[code]
+  };
+};
+
+/**
+ * @property errors
+ *
+ * @memberof $Worker
+ */
+Object.defineProperty($Worker.prototype, 'errors', {
+  enumerable: false,
+  configurable: false,
+  writable: false,
+  value: {
+    '0001': 'web workers are not supported in your current browser and no fallback has been given',
+    '0002': 'something went wrong with your worker'
+  }
+});
