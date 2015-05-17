@@ -22,6 +22,8 @@ function upVersion(writeTo, err, data) {
 
   file = JSON.parse(data);
 
+  console.log(file);
+
   version = file.version.split('.');
 
   version.forEach(function(val, idx) {
