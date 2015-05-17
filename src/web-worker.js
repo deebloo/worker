@@ -201,9 +201,11 @@ $Worker.prototype.error = function error(code) {
 };
 
 /**
- * @property errors
+ * @name errors
  *
  * @memberof $Worker
+ *
+ * @property
  */
 Object.defineProperty($Worker.prototype, 'errors', {
   enumerable: false,
