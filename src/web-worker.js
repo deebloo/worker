@@ -152,7 +152,7 @@ $Worker.prototype.loadScripts = function loadScripts() {
 
     worker.updateBlobArray(';');
     worker.updateBlobArray(currentMethod);
-    worker.updateBlobArray('var ' + key + ' = ');
+    worker.updateBlobArray(worker.makeVarName(key));
   }
 
   if(worker.hasWorkers) {
@@ -174,7 +174,7 @@ $Worker.prototype.removeScripts = function removeScripts() {
   var worker = this, array = worker.getBlobArray(), index;
 
   for(var i = 0, len = arguments.length; i < len; i++) {
-    index = array.indexOf('var ' + arguments[i] + ' = ');
+    index = array.indexOf(worker.makeVarName(arguments[i]));
 
     worker.removeFromBlobArray(index, 3);
   }
@@ -184,6 +184,17 @@ $Worker.prototype.removeScripts = function removeScripts() {
 
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
+};
+
+/**
+ * @name makeVarName
+ *
+ * @param {String} name
+ *
+ * @return {string}
+ */
+$Worker.prototype.makeVarName = function makeVarName(name) {
+  return 'var ' + name + ' = ';
 };
 
 /**
