@@ -10,8 +10,8 @@ echo "########## uglify the code"
 npm run uglify
 
 if [ "$2" ]
-echo "########## increment the release and push the tag to the repo"
 then
+  echo "########## increment the release and push the tag to the repo"
   node ./build/up-version.js $2
   git tag -a "$(node ./build/get-version.js)" -m "$1"
   git push origin master --tags
