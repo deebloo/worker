@@ -1,5 +1,11 @@
 /**
- * Increment
+ * @name up-version
+ *
+ * @description
+ * Increment the version for both bower.json and package.json files.
+ * arguments can be major|minor|patch
+ *
+ * @example node ./up-version patch
  */
 
 var fs = require('fs');
