@@ -15,6 +15,7 @@ node ./build/upversion.js $1
 Message=$2
 fi
 
+echo "$Message"
 
 git pull
 git add -A
