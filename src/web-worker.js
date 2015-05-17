@@ -1,3 +1,6 @@
+/**
+ * Create embedded web workers with a clean way to degrade gracefully for older browsers. (<=IE9)
+ */
 var $Worker = (function() {
   var errors = {
     '0001': 'web workers are not supported in your current browser and no fallback has been given',
