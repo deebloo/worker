@@ -20,8 +20,8 @@ describe('worker - success', function() {
 
     myWorker.loadScripts({'hello': hello}, {'goodbye': goodbye});
 
-    myWorker.onmessage = function(data) {
-      result = data;
+    myWorker.onmessage = function(res) {
+      result = res.data;
 
       done();
     };

@@ -27,18 +27,16 @@ var $Worker = (function() {
    * @constructor
    */
   function $Worker(method, fb, debug) {
-    var worker = this;
-
     blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
     hasWorkers = debug ? false : !!window.Worker; // does the browser have workers
 
-    worker.shell = null; // shell container
-    worker.fb = fb;
+    this.shell = null; // shell container
+    this.fb = fb;
 
     if(hasWorkers) {
       blob = new Blob(blobArray, { type: 'text/javascript' });
 
-      worker.shell = new Worker(createObjectURL(blob));
+      this.shell = new Worker(createObjectURL(blob));
     }
   }
 
@@ -53,23 +51,19 @@ var $Worker = (function() {
    * @param {*} [data] - the data to be passed to the worker
    */
   prototype.postMessage = function postMessage(data) {
-    var worker = this;
-
     if(hasWorkers) {
-      worker.shell.postMessage(data);
+      this.shell.postMessage(data);
 
-      worker.shell.onmessage = function(res) {
-        worker.onmessage(res.data);
-      };
+      this.shell.onmessage = this.onmessage;
 
-      worker.shell.onerror = worker.onerror;
+      this.shell.onerror = this.onerror;
     }
     else {
-      if(typeof worker.fb === 'function') {
-        worker.onmessage(worker.fb({ data: data }));
+      if(typeof this.fb === 'function') {
+        this.onmessage(this.fb({ data: data }));
       }
       else {
-        worker.onmessage(_error('0001'));
+        this.onmessage(_error('0001'));
       }
     }
   };
@@ -105,10 +99,8 @@ var $Worker = (function() {
    * terminate the created web worker
    */
   prototype.terminate = function terminate() {
-    var worker = this;
-
     if(hasWorkers) {
-      worker.shell.terminate();
+      this.shell.terminate();
     }
   };
 
@@ -121,7 +113,7 @@ var $Worker = (function() {
    * load named functions into the web worker to be used by the web worker
    */
   prototype.loadScripts = function loadScripts() {
-    var worker = this, current, currentMethod, key;
+    var current, currentMethod, key;
 
     for(var i = 0, len = arguments.length; i < len; i++) {
       current = arguments[i];
@@ -136,7 +128,7 @@ var $Worker = (function() {
     if(hasWorkers) {
       blob = new Blob(blobArray, { type: 'text/javascript' });
 
-      worker.shell = new Worker(createObjectURL(blob));
+      this.shell = new Worker(createObjectURL(blob));
     }
   };
 
@@ -149,7 +141,7 @@ var $Worker = (function() {
    * remove a previously loaded function from the worker
    */
   prototype.removeScripts = function removeScripts() {
-    var worker = this, index;
+    var index;
 
     for(var i = 0, len = arguments.length; i < len; i++) {
       index = blobArray.indexOf(_makeVarName(arguments[i]));
@@ -160,7 +152,7 @@ var $Worker = (function() {
     if(hasWorkers) {
       blob = new Blob(blobArray, { type: 'text/javascript' });
 
-      worker.shell = new Worker(createObjectURL(blob));
+      this.shell = new Worker(createObjectURL(blob));
     }
   };
 
@@ -169,7 +161,7 @@ var $Worker = (function() {
    *
    * @param {String} name
    *
-   * @return {string}
+   * @return {String}
    *
    * @private
    */
