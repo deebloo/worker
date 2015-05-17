@@ -85,15 +85,15 @@ var $Worker = (function() {
   prototype.onmessage = function onmessage() { };
 
   /**
-   * @name on_error
+   * @name onerror
    *
    * @memberof $Worker
    *
    * @description
    * override this method to when listening for worker _errors
    */
-  $Worker.prototype.on_error = function on_error() {
-    console._error(this._error('0002'));
+  $Worker.prototype.onerror = function onerror() {
+    console.error(_error('0002'));
   };
 
   /**
