@@ -6,9 +6,9 @@ npm run uglify
 
 if [ "$2" ]
 then
-    node ./build/up-version.js $2
-    git tag -a "$(node ./build/get-version.js)" -m "$1"
-    git push origin master --tags
+  node ./build/up-version.js $2
+  git tag -a "$(node ./build/get-version.js)" -m "$1"
+  git push origin master --tags
 fi
 
 git pull
