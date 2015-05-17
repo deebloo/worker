@@ -1,3 +1,7 @@
+/**
+ * Increment
+ */
+
 var fs = require('fs');
 
 var files = {
@@ -54,9 +58,5 @@ function upVersion(writeTo, err, data) {
 
   file.version = version.join('.');
 
-  fs.writeFile(writeTo, JSON.stringify(file, null, 2), function(err) {
-    if(err) {
-      return console.log(err);
-    }
-  });
+  fs.writeFileSync(writeTo, JSON.stringify(file, null, 2));
 }
