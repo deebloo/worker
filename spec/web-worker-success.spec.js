@@ -31,7 +31,6 @@ describe('worker - success', function() {
 
   afterEach(function() {
     myWorker.removeScripts('hello', 'goodbye');
-
     myWorker.terminate();
     myWorker = null;
     result = null;
