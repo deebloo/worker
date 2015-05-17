@@ -6,10 +6,9 @@ npm run docs
 npm run test
 npm run uglify
 
-if [ "$1" =  "major" ] || [ "$1" =  "minor" ] || [ "$1" =  "patch" ]
+if [ "$2" ]
 then
-node ./build/upversion.js $1
-Message=$2
+node ./build/upversion.js $2
 fi
 
 echo "$Message"
