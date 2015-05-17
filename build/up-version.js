@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * @name up-version
  *
