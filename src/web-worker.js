@@ -62,7 +62,7 @@ var $Worker = (function() {
         worker.onmessage(res.data);
       };
 
-      worker.shell.on_error = worker.on_error;
+      worker.shell.onerror = worker.on_error;
     }
     else {
       if(typeof worker.fb === 'function') {
