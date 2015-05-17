@@ -62,7 +62,7 @@ var $Worker = (function() {
         worker.onmessage(res.data);
       };
 
-      worker.shell.onerror = worker.on_error;
+      worker.shell.onerror = worker.onerror;
     }
     else {
       if(typeof worker.fb === 'function') {
@@ -92,7 +92,7 @@ var $Worker = (function() {
    * @description
    * override this method to when listening for worker _errors
    */
-  $Worker.prototype.onerror = function onerror() {
+  prototype.onerror = function onerror() {
     console.error(_error('0002'));
   };
 
