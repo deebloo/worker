@@ -7,21 +7,25 @@ var files = {
 
 var upType = process.argv[2];
 
-var bower = fs.readFileSync(files.bower);
+fs.readFile(files.bower, function(err, data) {
+  upVersion(files.bower, err, data);
+});
 
-var pdk = fs.readFileSync(files.package);
-
-upVersion(files.bower, bower);
-upVersion(files.package, pdk);
+fs.readFile(files.package, function(err, data) {
+  upVersion(files.package, err, data);
+});
 
 /**
  * @name upVersion
  *
  * @param {String} writeTo
+ * @param {Object} err
  * @param {Object} data
  */
-function upVersion(writeTo, data) {
+function upVersion(writeTo, err, data) {
   var file, version;
+
+  if(err) { throw err; }
 
   file = JSON.parse(data);
 
@@ -50,5 +54,9 @@ function upVersion(writeTo, data) {
 
   file.version = version.join('.');
 
-  fs.writeFileSync(writeTo, JSON.stringify(file, null, 2));
+  fs.writeFile(writeTo, JSON.stringify(file, null, 2), function(err) {
+    if(err) {
+      return console.log(err);
+    }
+  });
 }
