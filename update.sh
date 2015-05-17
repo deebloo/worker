@@ -2,12 +2,9 @@
 
 Message=$1
 
-#npm run docs
-#npm run test
-#npm run uglify
-
-
-echo "$1"
+npm run docs
+npm run test
+npm run uglify
 
 if [ "$1" =  "major" ] || [ "$1" =  "minor" ] || [ "$1" =  "patch" ]
 then
