@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 
+Message = $1
+
 npm run docs
 npm run test
 npm run uglify
 
-node ./build/upversion.js m$1
+
+echo "$1"
+
+if [ "$1" =  "major" ] || [ "$1" =  "minor" ] || [ "$1" =  "patch" ]
+then
+node ./build/upversion.js $1
+Message = $2
+fi
+
 
 git pull
 git add -A
-git commit -m$2
+git commit -mMessage
 git push

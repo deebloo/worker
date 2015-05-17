@@ -18,8 +18,6 @@ fs.readFile(files.package, function(err, data) {
 function upVersion(writeTo, err, data) {
   var file, version;
 
-  console.log(process.argv);
-
   if(err) { throw err; }
 
   file = JSON.parse(data);
