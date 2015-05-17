@@ -107,14 +107,6 @@ Remove injected scripts from the web worker
 
 ```JS
 myWorker.removeScripts('hello', 'goodbye');
-
-function hello() {
-  console.log('Hello World');
-}
-
-function goodbye() {
-  console.log('Goodbye World');
-}
 ```
 
 
