@@ -21,7 +21,7 @@ function $Worker(method, fb, debug) {
   worker.fb = fb;
 
   if(worker.hasWorkers) {
-    worker.blob = new Blob(blobArray, { type: "text/javascript" });
+    worker.blob = new Blob(blobArray, { type: 'text/javascript' });
 
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
@@ -156,7 +156,7 @@ $Worker.prototype.loadScripts = function loadScripts() {
   }
 
   if(worker.hasWorkers) {
-    worker.blob = new Blob(worker.getBlobArray(), { type: "text/javascript"});
+    worker.blob = new Blob(worker.getBlobArray(), { type: 'text/javascript' });
 
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
@@ -180,7 +180,7 @@ $Worker.prototype.removeScripts = function removeScripts() {
   }
 
   if(worker.hasWorkers) {
-    worker.blob = new Blob(worker.getBlobArray(), { type: "text/javascript"});
+    worker.blob = new Blob(worker.getBlobArray(), { type: 'text/javascript' });
 
     worker.shell = new Worker(window.URL.createObjectURL(worker.blob));
   }
