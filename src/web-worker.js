@@ -53,9 +53,7 @@ var $Worker = (function() {
   prototype.postMessage = function postMessage(data) {
     if(hasWorkers) {
       this.shell.postMessage(data);
-
       this.shell.onmessage = this.onmessage;
-
       this.shell.onerror = this.onerror;
     }
     else {
