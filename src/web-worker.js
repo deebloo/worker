@@ -30,7 +30,7 @@ var $Worker = (function() {
     blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
     hasWorkers = debug ? false : !!window.Worker; // does the browser have workers
 
-    this.shell = null; // shell container
+    this.shell = null;
     this.fb = fb;
 
     if(hasWorkers) {

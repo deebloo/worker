@@ -19,6 +19,9 @@
     "bower_components",
     "test",
     "tests",
-    "spec"
+    "spec",
+    "build",
+    "src",
+    "coverage"
   ]
 }
