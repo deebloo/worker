@@ -1,12 +1,12 @@
 {
   "name": "worker",
   "version": "0.0.16",
-  "homepage": "https://github.com/deebloo/webworkers",
+  "homepage": "https://github.com/deebloo/worker",
   "authors": [
     "dannybluedesign@gmail.com"
   ],
   "description": "a tiny micro library to make using web workers easier",
-  "main": "./src/web-worker.js",
+  "main": "./dist/web-worker.js",
   "keywords": [
     "webworker",
     "web",

@@ -8,6 +8,7 @@ npm run test
 
 echo "########## uglify the code"
 npm run uglify
+cp ./src/web-worker.js dist
 
 if [ "$2" ]
 then
