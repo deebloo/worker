@@ -26,6 +26,8 @@ describe('worker - success', function() {
       done();
     };
 
+    myWorker.onerror();
+
     myWorker.postMessage({length: 1024, min: 0, max: 9999});
   });
 
