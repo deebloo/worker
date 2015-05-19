@@ -28,6 +28,7 @@ cd ..
 git clone https://github.com/deebloo/worker.git worker-docs
 cd worker-docs
 git checkout gh-pages
+rm -rf *
 
 cd ..
 cd worker
