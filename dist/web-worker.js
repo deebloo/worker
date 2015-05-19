@@ -154,6 +154,8 @@ var $Worker = (function() {
   /**
    * @name _makeVarName
    *
+   * @memberof $Worker
+   *
    * @param {String} name
    *
    * @return {String}
