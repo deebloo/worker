@@ -23,3 +23,21 @@ git pull
 git add -A
 git commit -m"$1"
 git push
+
+cd ..
+git clone https://github.com/deebloo/worker.git worker-docs
+cd worker-docs
+git checkout gh-pages
+
+cd ..
+cd worker
+cp -R "./coverage/Chrome 42.0.2311 (Mac OS X 10.10.3)/". ../worker-docs/
+
+cd ..
+cd worker-docs
+git add -A
+git commit -m'update gh-pages doc'
+git push
+
+cd ..
+rm -rf worker-docs
