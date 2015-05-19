@@ -31,7 +31,7 @@ git checkout gh-pages
 
 cd ..
 cd worker
-cp -R "./coverage/Chrome 42.0.2311 (Mac OS X 10.10.3)/". ../worker-docs/
+cp -R ./docs. ../worker-docs/
 
 cd ..
 cd worker-docs
@@ -39,5 +39,5 @@ git add -A
 git commit -m'update gh-pages doc'
 git push
 
-#cd ..
-#rm -rf worker-docs
+cd ..
+rm -rf worker-docs
