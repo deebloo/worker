@@ -31,12 +31,12 @@ git checkout gh-pages
 
 cd ..
 cd worker
-cp -R ./docs. ../worker-docs/
+cp -R "./docs/". "../worker-docs/"
 
 cd ..
 cd worker-docs
 git add -A
-git commit -m'update gh-pages doc'
+git commit -m"update gh-pages doc"
 git push
 
 cd ..
