@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+##### TODO: move some of these things to CI
 
 echo "########## running unit tests"
 npm run test
