@@ -1,14 +1,9 @@
 /**
  * @name $Worker
  *
- * @param {Function} method - the web worker code to be run
- * @param {Function} [fb] - the fallback method to use if the web worker fails
- * @param {Boolean} [debug] - manually set the workers to fallback
- *
- * @description
- * spin up an embedded web worker.
- *
  * @constructor
+ *
+ * Create embedded web workers with a clean way to degrade gracefully for older browsers. (<=IE9)
  */
 var $Worker = (function() {
 
@@ -23,6 +18,18 @@ var $Worker = (function() {
       blob,
       hasWorkers;
 
+  /**
+   * @name $Worker
+   *
+   * @param {Function} method - the web worker code to be run
+   * @param {Function} [fb] - the fallback method to use if the web worker fails
+   * @param {Boolean} [debug] - manually set the workers to fallback
+   *
+   * @description
+   * spin up an embedded web worker.
+   *
+   * @constructor
+   */
   function $Worker(method, fb, debug) {
     blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
     hasWorkers = debug ? false : !!window.Worker; // does the browser have workers
