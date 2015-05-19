@@ -21,6 +21,8 @@ var $Worker = (function() {
   /**
    * @name $Worker
    *
+   * Create embedded web workers with a clean way to degrade gracefully for older browsers. (<=IE9)
+   *
    * @param {Function} method - the web worker code to be run
    * @param {Function} [fb] - the fallback method to use if the web worker fails
    * @param {Boolean} [debug] - manually set the workers to fallback
