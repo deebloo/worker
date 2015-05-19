@@ -39,5 +39,5 @@ git add -A
 git commit -m'update gh-pages doc'
 git push
 
-cd ..
-rm -rf worker-docs
+#cd ..
+#rm -rf worker-docs
