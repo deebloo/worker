@@ -29,6 +29,7 @@ var $Worker = (function() {
 
     this.shell = null;
     this.fb = fb;
+    this.hasRun = false;
 
     if(hasWorkers) {
       blob = new Blob(blobArray, { type: 'text/javascript' });
@@ -49,6 +50,7 @@ var $Worker = (function() {
    */
   prototype.postMessage = function postMessage(data) {
     if(hasWorkers) {
+      this.hasRun = true;
       this.shell.postMessage(data);
       this.shell.onmessage = this.onmessage;
       this.shell.onerror = this.onerror;
@@ -95,6 +97,8 @@ var $Worker = (function() {
    */
   prototype.terminate = function terminate() {
     if(hasWorkers) {
+      this.hasRun = false;
+
       this.shell.terminate();
     }
   };
@@ -121,6 +125,8 @@ var $Worker = (function() {
     }
 
     if(hasWorkers) {
+      this.hasRun = false;
+
       blob = new Blob(blobArray, { type: 'text/javascript' });
 
       this.shell = new Worker(createObjectURL(blob));
@@ -145,6 +151,8 @@ var $Worker = (function() {
     }
 
     if(hasWorkers) {
+      this.hasRun = false;
+
       blob = new Blob(blobArray, { type: 'text/javascript' });
 
       this.shell = new Worker(createObjectURL(blob));
