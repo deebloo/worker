@@ -1,4 +1,4 @@
-describe('worker - success', function() {
+describe('web-worker-load-scripts', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
@@ -24,7 +24,7 @@ describe('worker - success', function() {
     myWorker.postMessage();
   });
 
-  it('should create a big array', function() {
+  it('should return strings from the load scripts method', function() {
     expect(result).toBe('hello world');
   });
 });

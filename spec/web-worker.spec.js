@@ -1,4 +1,4 @@
-describe('worker - success', function() {
+describe('web-worker', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
