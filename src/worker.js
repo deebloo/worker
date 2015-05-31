@@ -60,7 +60,7 @@ var $worker = (function() {
      * @example
      * myWorker.loadScripts({
      *   hello: function() { return 'hello'; },
-     *   world: function() { return 'world'; }
+     *   world: function() { return 'world' }
      * })
      */
     loadScripts: function loadScripts(scripts) {

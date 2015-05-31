@@ -4,10 +4,10 @@
   "description": "a tiny micro library to make using web workers easier",
   "main": "src/web-worker.js",
   "scripts": {
-    "update": "./update.sh",
+    "update": "build-scripts/update.sh",
     "docs": "node node_modules/jsdoc/jsdoc.js src/ -d docs",
     "test": "node node_modules/karma/bin/karma start",
-    "uglify": "node node_modules/uglifyjs/bin/uglifyjs ./src/web-worker.js -o ./dist/web-worker.min.js --compress --mangle"
+    "uglify": "node node_modules/uglifyjs/bin/uglifyjs ./src/worker.js -o ./dist/worker.min.js --compress --mangle"
   },
   "repository": {
     "type": "git",
