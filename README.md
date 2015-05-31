@@ -13,7 +13,7 @@ bower install --save worker
 ### Basic Usage
 
 ```JS
-var myWorker = new $Worker(function(e) {
+var myWorker = $worker.create(function(e) {
   var sum = 0;
   
   e.data.forEach(function(int) {
@@ -32,8 +32,8 @@ myWorker.postMessage([1,2,3,4,5]);
 
 ### API
 
-#### $Worker
-Constructor - creates a new web worker
+#### myWorker.create
+creates a new web worker
 
 | Arg     | Type    | description |
 | --------|---------|-------|
@@ -42,7 +42,7 @@ Constructor - creates a new web worker
 
 Example:
 ```JS
-var myWorker = new $Worker(function(e) {
+var myWorker = $worker.create(function(e) {
   var sum = 0;
   
   e.data.forEach(function(int) {
@@ -53,7 +53,7 @@ var myWorker = new $Worker(function(e) {
 });
 ```
 
-#### $Worker.postMessage
+#### myWorker.postMessage
 Post data for the web worker to use. Runs the web worker
 
 | Arg     | Type    | description |
@@ -65,7 +65,7 @@ Example:
 myWorker.postMessage([1,2,3,4,5]);
 ```
 
-#### $Worker.onmessage
+#### myWorker.onmessage
 Override this method. This method is called whenever your $worker posts data back.
 
 | Arg     | Type    | description |
@@ -87,7 +87,10 @@ Sometimes you need to load functions into your worker. $worker.loadScripts loads
 | *  | Object | A map of functions and the name they should be stored under  |
 
 ```JS
-myWorker.loadScripts({'hello', hello}, {'goodbye': goodbye});
+myWorker.loadScripts({
+  'hello', hello, 
+  'goodbye': goodbye
+});
 
 function hello() {
   console.log('Hello World');
@@ -98,7 +101,7 @@ function goodbye() {
 }
 ```
 
-#### $Worker.removeScripts
+#### myWorker.removeScripts
 Remove injected scripts from the web worker
 
 | Arg     | Type    | description |
@@ -112,7 +115,7 @@ myWorker.removeScripts('hello', 'goodbye');
 
 ### Complete Example
 ```JS
-var myWorker = new $Worker(function(e) {
+var myWorker = $worker.create(function(e) {
   var foo = [], min = e.data.min, max = e.data.max;
   
   for (var i = 0; i < e.data.length; i++) {
@@ -125,7 +128,9 @@ var myWorker = new $Worker(function(e) {
   self.postMessage(foo);
 });
 
-myWorker.loadScripts({'hello', function hello() { console.log('yay')}});
+myWorker.loadScripts({
+'hello': function hello() { console.log('yay')}
+});
 
 myWorker.onmessage = function(data) {
   result = data;
