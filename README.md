@@ -32,7 +32,7 @@ myWorker.postMessage([1,2,3,4,5]);
 
 ### API
 
-#### myWorker.create
+#### $worker.create
 creates a new web worker
 
 | Arg     | Type    | description |
@@ -78,7 +78,7 @@ myWorker.onmessage = function(data) {
 };
 ```
 
-#### $Worker.loadScripts
+#### myWorker.loadScripts
 Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of functions into the web worker that can be used by the worker
 
 | Arg     | Type    | description |
@@ -87,17 +87,13 @@ Sometimes you need to load functions into your worker. $worker.loadScripts loads
 
 ```JS
 myWorker.loadScripts({
-  'hello', hello, 
-  'goodbye': goodbye
+  'hello', function() {
+    return 'hello';
+  }, 
+  'goodbye': function() {
+    return 'goodbye';
+  }
 });
-
-function hello() {
-  console.log('Hello World');
-}
-
-function goodbye() {
-  console.log('Goodbye World');
-}
 ```
 
 #### myWorker.removeScripts
