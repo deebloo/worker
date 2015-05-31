@@ -11,7 +11,7 @@ describe('web-worker-extend', function() {
     });
   });
 
-  it('should create a big array', function() {
+  it('should extend the entire prototype', function() {
     expect(myWorker.foo).toBe(undefined);
     expect(myWorker2.foo).toBe(undefined);
 

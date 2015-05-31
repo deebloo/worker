@@ -1,0 +1,21 @@
+<html>
+<head>
+	<title>web worker example</title>
+</head>
+
+<body>
+	<script src="../src/web-worker.js"></script>
+
+	<script>
+		var myWorker = $worker.create(function() {
+			self.postMessage('hello world');
+		});
+
+		myWorker.onmessage = function(e) {
+			document.write(e.data)
+		}
+
+		myWorker.postMessage();
+	</script>
+</body>
+</html>
