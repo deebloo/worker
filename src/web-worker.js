@@ -1,198 +1,180 @@
-var $Worker = (function() {
+/**
+ * @namespace
+ *
+ * @description
+ * A small micro library for assisting with the creation of web workers. No need for separate scripts for the worker itself and
+ * no separate file for scripts you want to include in the worker. Have 15 workers defined and you want to change a property on all of them?
+ * No problem. All workers inherit from the same object so you can make changes across the board;
+ *
+ * @type {{create: Function, extend: Function}}
+ */
+var $worker = (function() {
 
-  var errors = {
-    '0001': 'web workers are not supported in your current browser and no fallback has been given',
-    '0002': 'something went wrong with your worker'
+  var urlBuilder = window.URL.createObjectURL,
+      workers = [];
+
+  var proto = {
+    /**
+     * @name postMessage
+     *
+     * @memberof $worker#
+     *
+     * @description
+     * send data tp the worker and assign the onmessage and on error listeners
+     *
+     * @example
+     * myWorker.postMessage(1988);
+     *
+     * @param data
+     */
+    postMessage: function postMessage(data) {
+      this.shell.postMessage(data);
+      this.shell.onmessage = this.onmessage;
+      this.shell.onerror = this.onerror;
+    },
+
+    /**
+     * @name terminate
+     *
+     * @memberof $worker#
+     *
+     * @description
+     * terminate the worker. (all stop does not finish or allow cleanup)
+     *
+     * @example
+     * myWorker.terminate();
+     */
+    terminate: function terminate() {
+      this.shell.terminate();
+    },
+
+    /**
+     * @name loadScripts
+     *
+     * @memberof $worker#
+     *
+     * @description
+     * Allows the loading of scripts into the worker for use.
+     * NOTE: this will rebuild the worker. should not be done while the worker is running
+     *
+     * @example
+     * myWorker.loadScripts({
+     *   hello: function() { return 'hello'; },
+     *   world: 'world'
+     * })
+     */
+    loadScripts: function loadScripts(scripts) {
+      var key, val;
+
+      for(var name in scripts) {
+        if(scripts.hasOwnProperty(name)) {
+          key = name;
+          val = scripts[name];
+
+          this.blobArray.unshift(';');
+          this.blobArray.unshift(val);
+          this.blobArray.unshift(_makeVarName(key));
+        }
+      }
+
+      this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
+
+      this.shell = new Worker(urlBuilder(this.blob));
+    },
+
+    /**
+     * @name removeScripts
+     *
+     * @memberof $worker#
+     *
+     * @description
+     * remove scripts that have been loaded into the worker.
+     * NOTE: this will rebuild the worker. should not be done while the worker is running
+     *
+     * @example
+     * myWorker.removeScripts('hello', 'world');
+     */
+    removeScripts: function removeScripts() {
+      var index;
+
+      for(var i = 0, len = arguments.length; i < len; i++) {
+        index = this.blobArray.indexOf(_makeVarName(arguments[i]));
+
+        blobArray.splice(index, 3);
+      }
+
+      this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
+
+      this.shell = new Worker(urlBuilder(this.blob));
+    }
   };
 
-  var prototype = $Worker.prototype,
-      createObjectURL = window.URL.createObjectURL,
-      blobArray,
-      blob,
-      hasWorkers;
+  var protectedMethods = Object.keys(proto);
 
   /**
-   * @name $Worker
+   * @name create
    *
-   * @param {Function} method - the web worker code to be run
-   * @param {Function} [fb] - the fallback method to use if the web worker fails
-   * @param {Boolean} [debug] - manually set the workers to fallback
+   * @memberof $worker#
    *
-   * @description
-   * spin up an embedded web worker.
+   * @param method
    *
-   * @constructor
+   * @example
+   * var myWorker = $worker.create(function(e.data) {
+   *   self.postMessage(e.data + 1);
+   * });
+   *
+   * @return {proto}
+   *
+   * @public
    */
-  function $Worker(method, fb, debug) {
-    blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
-    hasWorkers = debug ? false : !!window.Worker; // does the browser have workers
+  function create(method) {
+    var createdWorker = Object.create(proto);
 
-    this.shell = null;
-    this.fb = fb;
-    this.hasRun = false;
+    createdWorker.blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
+    createdWorker.blob = new Blob(createdWorker.blobArray, { type: 'text/javascript' });
+    createdWorker.shell = new Worker(urlBuilder(createdWorker.blob));
 
-    if(hasWorkers) {
-      blob = new Blob(blobArray, { type: 'text/javascript' });
+    workers.push(createdWorker);
 
-      this.shell = new Worker(createObjectURL(blob));
-    }
+    return createdWorker;
   }
 
   /**
-   * @name postMessage
+   * @name extend
    *
-   * @memberof $Worker
+   * @memberof $worker
    *
    * @description
-   * run the created web worker. either post the message to the thread OR return the result of of fallback to the onmessage method
+   * Extend the base prototype. Properties will be inherited by ALL currently created and new workers. The base prototype methods cannot be overridden.
    *
-   * @param {*} [data] - the data to be passed to the worker
+   * @example
+   * $worker.extend({
+   *   newProp1: function() {
+   *     return 'I am a new prototype property'
+   *   },
+   *   newProp2: 'We are workers'
+   * });
+   *
+   * @public
    */
-  prototype.postMessage = function postMessage(data) {
-    if(hasWorkers) {
-      this.hasRun = true;
-
-      this.shell.postMessage(data);
-
-      this.shell.onmessage = this.onmessage;
-
-      this.shell.onerror = this.onerror;
-    }
-    else {
-      if(typeof this.fb === 'function') {
-        this.onmessage(this.fb({ data: data }));
-      }
-      else {
-        this.onmessage(_error('0001'));
+  function extend(obj) {
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key)) {
+        if(protectedMethods.indexOf(key) < 0) {
+          proto[key] = obj[key]
+        }
       }
     }
-  };
+  }
 
-  /**
-   * @name onmessage
-   *
-   * @memberof $Worker
-   *
-   * @description
-   * override this method to when listening for the worker to complete
-   */
-  prototype.onmessage = function onmessage() { };
-
-  /**
-   * @name onerror
-   *
-   * @memberof $Worker
-   *
-   * @description
-   * override this method to when listening for worker _errors
-   */
-  prototype.onerror = function onerror() {
-    console.error(_error('0002'));
-  };
-
-  /**
-   * @name terminate
-   *
-   * @memberof $Worker
-   *
-   * @description
-   * terminate the created web worker
-   */
-  prototype.terminate = function terminate() {
-    if(hasWorkers) {
-      this.hasRun = false;
-
-      this.shell.terminate();
-    }
-  };
-
-  /**
-   * @name loadScripts
-   *
-   * @memberof $Worker
-   *
-   * @description
-   * load named functions into the web worker to be used by the web worker
-   */
-  prototype.loadScripts = function loadScripts() {
-    var current, currentMethod, key;
-
-    for(var i = 0, len = arguments.length; i < len; i++) {
-      current = arguments[i];
-      key = Object.keys(current)[0];
-      currentMethod = current[key];
-
-      blobArray.unshift(';');
-      blobArray.unshift(currentMethod);
-      blobArray.unshift(_makeVarName(key));
-    }
-
-    if(hasWorkers) {
-      this.hasRun = false;
-
-      blob = new Blob(blobArray, { type: 'text/javascript' });
-
-      this.shell = new Worker(createObjectURL(blob));
-    }
-  };
-
-  /**
-   * @name removeScripts
-   *
-   * @memberof $Worker
-   *
-   * @description
-   * remove a previously loaded function from the worker
-   */
-  prototype.removeScripts = function removeScripts() {
-    var index;
-
-    for(var i = 0, len = arguments.length; i < len; i++) {
-      index = blobArray.indexOf(_makeVarName(arguments[i]));
-
-      blobArray.splice(index, 3);
-    }
-
-    if(hasWorkers) {
-      this.hasRun = false;
-
-      blob = new Blob(blobArray, { type: 'text/javascript' });
-
-      this.shell = new Worker(createObjectURL(blob));
-    }
-  };
-
-  /**
-   * @name _makeVarName
-   *
-   * @memberof $Worker
-   *
-   * @param {String} name
-   *
-   * @return {String}
-   *
-   * @private
-   */
+  /* @private */
   function _makeVarName(name) {
     return 'var ' + name + ' = ';
   }
 
-  /**
-   * @name _error
-   *
-   * @memberof $Worker
-   *
-   * @param {String} code - the web worker code to be run
-   *
-   * @private
-   */
-  function _error(code) {
-    return {
-      code: code,
-      message: errors[code]
-    };
+  return {
+    create: create,
+    extend: extend
   }
-
-  return $Worker;
 
 }());
