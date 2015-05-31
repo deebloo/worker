@@ -26,7 +26,7 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-    browsers: ['IE'],
+    browsers: ['Chrome', 'Firefox', 'IE'],
 
     reporters: ['coverage', 'progress'],
 

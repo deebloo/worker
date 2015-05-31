@@ -60,7 +60,7 @@ var $worker = (function() {
      * @example
      * myWorker.loadScripts({
      *   hello: function() { return 'hello'; },
-     *   world: 'world'
+     *   world: function() { return 'world'; }
      * })
      */
     loadScripts: function loadScripts(scripts) {
@@ -72,7 +72,7 @@ var $worker = (function() {
           val = scripts[name];
 
           this.blobArray.unshift(';');
-          this.blobArray.unshift(val);
+          this.blobArray.unshift(val.toString());
           this.blobArray.unshift(_makeVarName(key));
         }
       }
@@ -130,7 +130,7 @@ var $worker = (function() {
   function create(method) {
     var createdWorker = Object.create(proto);
 
-    createdWorker.blobArray = ['self.onmessage = ', method, ';']; // array to be used for blob
+    createdWorker.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
     createdWorker.blob = new Blob(createdWorker.blobArray, { type: 'text/javascript' });
     createdWorker.shell = new Worker(urlBuilder(createdWorker.blob));
 

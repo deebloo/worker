@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
 	<title>web worker example</title>
@@ -8,7 +9,7 @@
 
 	<script>
 		var myWorker = $worker.create(function() {
-			self.postMessage('hello world');
+			self.postMessage('Welcome');
 		});
 
 		myWorker.onmessage = function(e) {
