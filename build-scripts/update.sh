@@ -5,7 +5,7 @@ npm run test
 
 echo "########## uglify the code"
 npm run uglify
-cp ../src/worker.js dist
+cp ../src/worker.js ../dist/
 
 if [ "$2" ]
 then
