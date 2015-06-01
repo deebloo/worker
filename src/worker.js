@@ -127,7 +127,7 @@ var $worker = (function() {
    *
    * @public
    */
-  function create(method) {
+   function create(method) {
     var createdWorker = Object.create(proto);
 
     createdWorker.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
@@ -167,14 +167,26 @@ var $worker = (function() {
     }
   }
 
+  function viewAll() {
+    return workers;
+  }
+
   /* @private */
   function _makeVarName(name) {
     return 'var ' + name + ' = ';
   }
 
+  /**
+   * Expose public methods
+   * 
+   * @param create
+   * @param extend
+   * @param viewAll
+   */
   return {
     create: create,
-    extend: extend
+    extend: extend,
+    viewAll: viewAll
   }
 
 }());

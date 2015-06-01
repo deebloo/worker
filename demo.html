@@ -8,15 +8,55 @@
 	<script src="../src/worker.js"></script>
 
 	<script>
-		var myWorker = $worker.create(function() {
-			self.postMessage('Welcome');
-		});
+		// Create the worker
+		var myWorker = $worker.create(function(e) {
 
-		myWorker.onmessage = function(e) {
-			document.write(e.data)
-		}
+      var list = createArray(e.data.length, e.data.min, e.data.max);
 
-		myWorker.postMessage();
+      var total = addArray(list);
+
+      self.postMessage(total);
+    
+    });
+
+    // Load in scripts that need to be shared
+    myWorker.loadScripts({
+    	createArray: function(length, min, max) {
+    		var list = [];
+
+	      for (var i = 0; i < length; i++) {
+	        list.push(Math.floor(Math.random() * (max - min)) + min);
+	      }
+
+	      return list;
+    	},
+    	addArray: function(arr) {
+    		var total = 0;
+
+    		arr.forEach(function(val) {
+      		total += val;
+      	});
+
+      	return total;
+    	}
+    });
+
+    // Add onmessage handler
+    myWorker.onmessage = function(res) {
+      document.write(res.data);
+    };
+
+    // fire off the worker by posting to it
+    myWorker.postMessage({length: 1024, min: 0, max: 9999});
+
+    // extend the worker prototype
+    $worker.extend({
+    	showMeYourGuts: function() {
+    		console.log(this);
+    	}
+    });
+
+    myWorker.showMeYourGuts();
 	</script>
 </body>
 </html>
