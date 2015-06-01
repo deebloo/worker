@@ -89,7 +89,7 @@ NOTE: anything other then functions should be passed in with postMessage
 
 ```JS
 myWorker.loadScripts({
-  'hello', function() {
+  'hello': function() {
     return 'hello';
   }, 
   'goodbye': function() {
