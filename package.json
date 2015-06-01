@@ -2,7 +2,7 @@
   "name": "worker",
   "version": "0.2.1",
   "description": "a tiny micro library to make using web workers easier",
-  "main": "src/web-worker.js",
+  "main": "src/worker.js",
   "scripts": {
     "update": "build-scripts/update.sh",
     "docs": "node node_modules/jsdoc/jsdoc.js src/ -d docs",

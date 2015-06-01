@@ -5,16 +5,21 @@
 	</head>
 
 	<body>
+    <h1>Look In The Console</h1>
 		<script src="src/worker.js"></script>
-
 		<script>
       // Create your web worker
 			var myWorker = $worker.create(function() {
-        request('/bower.json', function(data) { self.postMessage(data); });
-        request('/package.json', function(data) { self.postMessage(data); });
+        request('/bower.json', function(data) {
+          self.postMessage(data);
+        });
+
+        request('/package.json', function(data) {
+          self.postMessage(data);
+        });
 	    });
 
-      // Load external script into the worker
+      // Load our request method into the worker
 	    myWorker.loadScripts({
 	    	request: request
 	    });
