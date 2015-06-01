@@ -17,19 +17,6 @@ describe('web-worker-extend', function() {
   });
 
   it('should extend the entire prototype', function() {
-    expect(myWorker.foo).toBe(undefined);
-    expect(myWorker2.foo).toBe(undefined);
-
-    $worker.extend({
-      foo: true
-    });
-
-    myWorker.bar = true;
-
-    expect(myWorker.foo).toBe(true);
-    expect(myWorker2.foo).toBe(true);
-
-    expect(myWorker.bar).toBe(true);
-    expect(myWorker2.bar).toBe(undefined);
+    expect($worker.viewAll().length).toBe(2);
   });
 });

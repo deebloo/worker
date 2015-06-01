@@ -102,7 +102,7 @@ var $worker = (function() {
       for(var i = 0, len = arguments.length; i < len; i++) {
         index = this.blobArray.indexOf(_makeVarName(arguments[i]));
 
-        blobArray.splice(index, 3);
+        this.blobArray.splice(index, 3);
       }
 
       this.blob = new Blob(this.blobArray, { type: 'text/javascript' });

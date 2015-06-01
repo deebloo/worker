@@ -18,10 +18,16 @@ describe('web-worker-load-scripts', function() {
     myWorker.onmessage = function(res) {
       result = res.data;
 
+      myWorker.removeScripts('hello', 'world');
+
       done();
     };
 
     myWorker.postMessage();
+  });
+
+  afterEach(function() {
+    myWorker.terminate();
   });
 
   it('should return strings from the load scripts method', function() {
