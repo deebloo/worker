@@ -45,7 +45,9 @@ var $worker = (function() {
      * myWorker.terminate();
      */
     terminate: function terminate() {
-      this.shell.terminate();
+      workers.splice(workers.indexOf(this), 1); // remove the worker for the list
+
+      this.shell.terminate(); // terminate the actuall worker
     },
 
     /**
@@ -167,6 +169,14 @@ var $worker = (function() {
     }
   }
 
+  /**
+   * @name viewAll
+   *
+   * @memberof $worker
+   * 
+   * @description
+   * return the current list of active workers
+   */
   function viewAll() {
     return workers;
   }
