@@ -79,7 +79,9 @@ myWorker.onmessage = function(data) {
 ```
 
 #### myWorker.loadScripts
-Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of functions into the web worker that can be used by the worker
+Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of functions into the web worker that can be used by the worker. 
+
+NOTE: anything other then functions should be passed in with postMessage 
 
 | Arg     | Type    | description |
 | --------|---------|-------|
