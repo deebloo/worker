@@ -8,35 +8,45 @@
 		<script src="src/worker.js"></script>
 
 		<script>
+      // Create your web worker
 			var myWorker = $worker.create(function() {
-        request('/bower.json');
-        request('/package.json');
+        request('/bower.json', function(data) { self.postMessage(data); });
+        request('/package.json', function(data) { self.postMessage(data); });
 	    });
 
+      // Load external script into the worker
 	    myWorker.loadScripts({
-        //Could inject the angular $http service for example
-	    	request: function(path) {
-          var oReq = new XMLHttpRequest();
-
-          oReq.onload = function() {
-            self.postMessage({
-              key: path,
-              content: this.responseText
-            });
-          };
-
-          oReq.open('GET', 'http://localhost:8080' + path, true);
-
-          oReq.send();
-	    	}
+	    	request: request
 	    });
 
+      // Listen for the data to come back
 	    myWorker.onmessage = function(res) {
         console.log(res.data);
 	    };
 
+      // Fire off the worker
 	    myWorker.postMessage();
 
+      // Use the same method outside of the worker!
+      request('/demo.html', function(data) {
+        console.log(data);
+      });
+
+      // My Request method
+      function request(path, cb) {
+        var oReq = new XMLHttpRequest();
+
+        oReq.onload = function() {
+          cb({
+            key: path,
+            content: this.responseText
+          });
+        };
+
+        oReq.open('GET', 'http://localhost:8080' + path, true);
+
+        oReq.send();
+      }
 		</script>
 	</body>
 </html>
