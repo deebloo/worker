@@ -8,55 +8,35 @@
 		<script src="src/worker.js"></script>
 
 		<script>
-			// Create the worker
-			var myWorker = $worker.create(function(e) {
-
-	      var list = createArray(e.data.length, e.data.min, e.data.max);
-
-	      var total = addArray(list);
-
-	      self.postMessage(total);
-	    
+			var myWorker = $worker.create(function() {
+        request('/bower.json');
+        request('/package.json');
 	    });
 
-	    // Load in scripts that need to be shared
 	    myWorker.loadScripts({
-	    	createArray: function(length, min, max) {
-	    		var list = [];
+        //Could inject the angular $http service for example
+	    	request: function(path) {
+          var oReq = new XMLHttpRequest();
 
-		      for (var i = 0; i < length; i++) {
-		        list.push(Math.floor(Math.random() * (max - min)) + min);
-		      }
+          oReq.onload = function() {
+            self.postMessage({
+              key: path,
+              content: this.responseText
+            });
+          };
 
-		      return list;
-	    	},
-	    	addArray: function(arr) {
-	    		var total = 0;
+          oReq.open('GET', 'http://localhost:8080' + path, true);
 
-	    		arr.forEach(function(val) {
-	      		total += val;
-	      	});
-
-	      	return total;
+          oReq.send();
 	    	}
 	    });
 
-	    // Add onmessage handler
 	    myWorker.onmessage = function(res) {
-	      document.write(res.data);
+        console.log(res.data);
 	    };
 
-	    // fire off the worker by posting to it
-	    myWorker.postMessage({length: 1024, min: 0, max: 9999});
+	    myWorker.postMessage();
 
-	    // extend the worker prototype
-	    $worker.extend({
-	    	showMeYourGuts: function() {
-	    		console.log(this);
-	    	}
-	    });
-
-	    myWorker.showMeYourGuts();
 		</script>
 	</body>
 </html>
