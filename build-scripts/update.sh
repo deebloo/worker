@@ -11,7 +11,7 @@ cp ../src/worker.js dist
 if [ "$2" ]
 then
     echo "########## increment the release and push the tag to the repo"
-    node ./up-version.js $2
+    node up-version.js $2
     git tag -a "$(node get-version.js)" -m "$1"
     git push origin master --tags
 
