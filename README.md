@@ -67,8 +67,7 @@ Example:
 ```JS
 var worker = $worker();
 
-var myWorker = worker.create(function() {
-});
+var myWorker = worker.create( ... );
 
 worker.extend({
   foo: true,
