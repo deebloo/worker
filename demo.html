@@ -8,7 +8,9 @@
     <h1>Look In The Console</h1>
 		<script src="src/worker.js"></script>
 		<script>
-      // Create your web worker
+      //Instantiate $worker
+      var workers = $worker();
+
 			var myWorker = $worker().create(function() {
         request('/bower.json', function(data) {
           self.postMessage(data);

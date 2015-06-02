@@ -87,7 +87,6 @@ function $worker() {
 
       this.shell = new Worker(urlBuilder(this.blob));
     },
-
     /**
      * @name removeScripts
      *

@@ -32,7 +32,15 @@ myWorker.postMessage([1,2,3,4,5]);
 
 ### API
 
-#### $worker().create
+### $worker
+factory - creates instance of $worker that can then be used to create web workers
+
+Example:
+```JS
+var worker = $worker();
+```
+
+#### $worker().create()
 creates a new web worker
 
 | Arg     | Type    | description |
@@ -52,7 +60,38 @@ var myWorker = $worker().create(function(e) {
 });
 ```
 
-#### myWorker.postMessage
+### $worker().extend()
+extends that worker instances prototypes. Automatically updates all new and current worker objects.
+
+Example:
+```JS
+var worker = $worker();
+
+var myWorker = worker.create(function() {
+});
+
+worker.extend({
+  foo: true,
+  bar: true
+});
+
+myWorker.foo === true
+```
+
+### $worker().list()
+Returns a list of all of the created workers
+
+Example:
+```JS
+var workerGroup = $worker();
+
+workerGroup.create( ... );
+workerGroup.create( ... );
+
+workerGroup.list().length === 2
+```
+
+#### $worker().create().postMessage
 Post data for the web worker to use. Runs the web worker
 
 | Arg     | Type    | description |
@@ -61,10 +100,12 @@ Post data for the web worker to use. Runs the web worker
 
 Example:
 ```JS
-myWorker.postMessage([1,2,3,4,5]);
+var myWorker = $worker().create( ... );
+
+myWorker.postMessage( ... );
 ```
 
-#### myWorker.onmessage
+#### $worker().create().onmessage
 Override this method. This method is called whenever your $worker posts data back.
 
 | Arg     | Type    | description |
@@ -73,12 +114,16 @@ Override this method. This method is called whenever your $worker posts data bac
 
 Example:
 ```JS
-myWorker.onmessage = function(data) {
-  console.log(data);
-};
+var myWorker = $worker().create( ... );
+
+myWorker.onmessage = function() {
+
+  ...
+
+}
 ```
 
-#### myWorker.loadScripts
+#### $worker().create().loadScripts()
 Sometimes you need to load functions into your worker. $worker.loadScripts loads a list of functions into the web worker that can be used by the worker. 
 
 NOTE: anything other then functions should be passed in with postMessage 
@@ -88,17 +133,22 @@ NOTE: anything other then functions should be passed in with postMessage
 | *  | Object | A map of functions and the name they should be stored under  |
 
 ```JS
+var myWorker = $worker().create(function() {
+  var hello = hello();
+  var goodbye = goodbye();
+});
+
 myWorker.loadScripts({
-  'hello': function() {
+  hello: function() {
     return 'hello';
   }, 
-  'goodbye': function() {
+  goodbye: function() {
     return 'goodbye';
   }
 });
 ```
 
-#### myWorker.removeScripts
+#### $worker().create().removeScripts()
 Remove injected scripts from the web worker
 
 | Arg     | Type    | description |
@@ -106,6 +156,8 @@ Remove injected scripts from the web worker
 | *  | String | A list of function names to be removed.  |
 
 ```JS
+var myWorker = $worker().create( ... );
+
 myWorker.removeScripts('hello', 'goodbye');
 ```
 
