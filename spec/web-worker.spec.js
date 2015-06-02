@@ -2,7 +2,7 @@ describe('web-worker', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
-    myWorker = $worker.create(function(e) {
+    myWorker = $worker().create(function(e) {
       var foo = [], min = e.data.min, max = e.data.max;
 
       for (var i = 0; i < e.data.length; i++) {

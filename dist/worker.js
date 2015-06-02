@@ -1,14 +1,14 @@
 /**
- * @namespace
+ * @name $worker
  *
  * @description
  * A small micro library for assisting with the creation of web workers. No need for separate scripts for the worker itself and
  * no separate file for scripts you want to include in the worker. Have 15 workers defined and you want to change a property on all of them?
- * No problem. All workers inherit from the same object so you can make changes across the board;
+ * No problem. All workers inherit from the same object so you can make changes across the board
  *
- * @type {{create: Function, extend: Function}}
+ * @returns {{create: Function, extend: Function, list: Function}}
  */
-var $worker = (function() {
+function $worker() {
 
   var urlBuilder = window.URL.createObjectURL,
       workers = [];
@@ -17,7 +17,7 @@ var $worker = (function() {
     /**
      * @name postMessage
      *
-     * @memberof $worker#
+     * @memberof $worker
      *
      * @description
      * send data tp the worker and assign the onmessage and on error listeners
@@ -29,14 +29,16 @@ var $worker = (function() {
      */
     postMessage: function postMessage(data) {
       this.shell.postMessage(data);
+
       this.shell.onmessage = this.onmessage;
+
       this.shell.onerror = this.onerror;
     },
 
     /**
      * @name terminate
      *
-     * @memberof $worker#
+     * @memberof $worker
      *
      * @description
      * terminate the worker. (all stop does not finish or allow cleanup)
@@ -47,13 +49,13 @@ var $worker = (function() {
     terminate: function terminate() {
       workers.splice(workers.indexOf(this), 1); // remove the worker for the list
 
-      this.shell.terminate(); // terminate the actuall worker
+      this.shell.terminate(); // terminate the actual worker
     },
 
     /**
      * @name loadScripts
      *
-     * @memberof $worker#
+     * @memberof $worker
      *
      * @description
      * Allows the loading of scripts into the worker for use.
@@ -74,7 +76,9 @@ var $worker = (function() {
           val = scripts[name];
 
           this.blobArray.unshift(';');
+
           this.blobArray.unshift(val.toString());
+
           this.blobArray.unshift(_makeVarName(key));
         }
       }
@@ -87,7 +91,7 @@ var $worker = (function() {
     /**
      * @name removeScripts
      *
-     * @memberof $worker#
+     * @memberof $worker
      *
      * @description
      * remove scripts that have been loaded into the worker.
@@ -102,7 +106,7 @@ var $worker = (function() {
       for(var i = 0, len = arguments.length; i < len; i++) {
         index = this.blobArray.indexOf(_makeVarName(arguments[i]));
 
-        blobArray.splice(index, 3);
+        this.blobArray.splice(index, 3);
       }
 
       this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
@@ -116,7 +120,7 @@ var $worker = (function() {
   /**
    * @name create
    *
-   * @memberof $worker#
+   * @memberof $worker
    *
    * @param method
    *
@@ -170,14 +174,14 @@ var $worker = (function() {
   }
 
   /**
-   * @name viewAll
+   * @name list
    *
    * @memberof $worker
    * 
    * @description
    * return the current list of active workers
    */
-  function viewAll() {
+  function list() {
     return workers;
   }
 
@@ -189,14 +193,14 @@ var $worker = (function() {
   /**
    * Expose public methods
    * 
-   * @param create
-   * @param extend
-   * @param viewAll
+   * @param {Function} create
+   * @param {Function} extend
+   * @param {Function} viewAll
    */
   return {
     create: create,
     extend: extend,
-    viewAll: viewAll
+    list: list
   }
 
-}());
+}

@@ -1,12 +1,14 @@
-describe('web-worker-extend', function() {
-  var myWorker, myWorker2;
+describe('web-worker-view-all', function() {
+  var myWorker, myWorker2, batch;
 
   beforeEach(function() {
-    myWorker = $worker.create(function() {
+    batch = $worker();
+
+    myWorker = batch.create(function() {
       self.postMessage('Hello World');
     });
 
-    myWorker2 = $worker.create(function() {
+    myWorker2 = batch.create(function() {
       self.postMessage('Hello World');
     });
   });
@@ -16,7 +18,7 @@ describe('web-worker-extend', function() {
     myWorker2.terminate();
   });
 
-  it('should extend the entire prototype', function() {
-    expect($worker.viewAll().length).toBe(2);
+  it('return all of the active workers in a specific group', function() {
+    expect(batch.list().length).toBe(2);
   });
 });

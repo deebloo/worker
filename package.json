@@ -1,6 +1,6 @@
 {
   "name": "worker",
-  "version": "0.2.1",
+  "version": "0.5.0",
   "description": "a tiny micro library to make using web workers easier",
   "main": "src/worker.js",
   "scripts": {
@@ -9,7 +9,9 @@
     "test": "node node_modules/karma/bin/karma start",
     "uglify": "node node_modules/uglifyjs/bin/uglifyjs ./src/worker.js -o ./dist/worker.min.js --compress --mangle"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/deebloo/workers.git"

@@ -13,8 +13,6 @@ then
     node ./build-scripts/up-version.js $2
     git tag -a "$(node ./build-scripts/get-version.js)" -m "$1"
     git push origin master --tags
-
-    ./build-scripts/gh-pages.sh
 fi
 
 echo "########## commit and push the code up to the repo"

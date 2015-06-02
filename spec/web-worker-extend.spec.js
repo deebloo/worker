@@ -1,13 +1,19 @@
 describe('web-worker-extend', function() {
-  var myWorker, myWorker2;
+  var myWorker, myWorker2, myWorker3, batch;
 
   beforeEach(function() {
-    myWorker = $worker.create(function() {
+    batch = $worker();
+
+    myWorker = batch.create(function() {
       self.postMessage('Hello World');
     });
 
-    myWorker2 = $worker.create(function() {
+    myWorker2 = batch.create(function() {
       self.postMessage('Hello World');
+    });
+
+    myWorker3 = $worker().create(function() {
+      self.postMessage('I am all alone!');
     });
   });
 
@@ -19,17 +25,20 @@ describe('web-worker-extend', function() {
   it('should extend the entire prototype', function() {
     expect(myWorker.foo).toBe(undefined);
     expect(myWorker2.foo).toBe(undefined);
+    expect(myWorker3.foo).toBe(undefined);
 
-    $worker.extend({
+    batch.extend({
       foo: true
     });
 
-    myWorker.bar = true;
-
     expect(myWorker.foo).toBe(true);
     expect(myWorker2.foo).toBe(true);
+    expect(myWorker3.foo).toBe(undefined);
+
+    myWorker.bar = true;
 
     expect(myWorker.bar).toBe(true);
     expect(myWorker2.bar).toBe(undefined);
+    expect(myWorker3.bar).toBe(undefined);
   });
 });

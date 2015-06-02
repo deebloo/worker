@@ -13,7 +13,7 @@ bower install --save worker
 ### Basic Usage
 
 ```JS
-var myWorker = $worker.create(function(e) {
+var myWorker = $worker().create(function(e) {
   var sum = 0;
   
   e.data.forEach(function(int) {
@@ -32,7 +32,7 @@ myWorker.postMessage([1,2,3,4,5]);
 
 ### API
 
-#### $worker.create
+#### $worker().create
 creates a new web worker
 
 | Arg     | Type    | description |
@@ -41,7 +41,7 @@ creates a new web worker
 
 Example:
 ```JS
-var myWorker = $worker.create(function(e) {
+var myWorker = $worker().create(function(e) {
   var sum = 0;
   
   e.data.forEach(function(int) {
@@ -112,7 +112,9 @@ myWorker.removeScripts('hello', 'goodbye');
 
 ### Complete Example
 ```JS
-var myWorker = $worker.create(function(e) {
+var group = $worker();
+
+var myWorker = group.create(function(e) {
   var foo = [], min = e.data.min, max = e.data.max;
   
   for (var i = 0; i < e.data.length; i++) {
