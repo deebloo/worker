@@ -101,7 +101,7 @@ Example:
 ```JS
 var myWorker = $worker().create( ... );
 
-myWorker.postMessage( ... );
+myWorker.postMessage([ ...somedata... ]);
 ```
 
 #### $worker().create().onmessage
@@ -115,10 +115,8 @@ Example:
 ```JS
 var myWorker = $worker().create( ... );
 
-myWorker.onmessage = function() {
-
-  ...
-
+myWorker.onmessage = function(e) {
+  console.log(e.data)
 }
 ```
 
