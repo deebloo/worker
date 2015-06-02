@@ -128,7 +128,7 @@ var myWorker = group.create(function(e) {
 });
 
 myWorker.loadScripts({
-'hello': function hello() { console.log('yay')}
+  'hello': function hello() { console.log('yay')}
 });
 
 myWorker.onmessage = function(data) {
