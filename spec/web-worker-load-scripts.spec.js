@@ -3,7 +3,7 @@ describe('web-worker-load-scripts', function() {
 
   beforeEach(function(done) {
     myWorker = $worker().create(function() {
-      self.postMessage(hello() + ' ' + world());
+      self.postMessage(self.hello() + ' ' + self.world());
     });
 
     myWorker.loadScripts({

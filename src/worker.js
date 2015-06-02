@@ -187,7 +187,7 @@ function $worker() {
 
   /* @private */
   function _makeVarName(name) {
-    return 'var ' + name + ' = ';
+    return 'self.' + name + ' = ';
   }
 
   /**
