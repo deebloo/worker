@@ -15,6 +15,26 @@ function $worker() {
 
   var proto = {
     /**
+     * @name onmessage
+     *
+     * @memberof $worker
+     *
+     * @description
+     * overwrite this method to listen for data coming back from the worker
+     */
+    onmessage: function() {},
+
+    /**
+     * @name onerror
+     *
+     * @memberof $worker
+     *
+     * @description
+     * overwrite this method to listen for errors coming from the worker
+     */
+    onerror: function() {},
+
+    /**
      * @name postMessage
      *
      * @memberof $worker
@@ -87,7 +107,6 @@ function $worker() {
 
       this.shell = new Worker(urlBuilder(this.blob));
     },
-
     /**
      * @name removeScripts
      *
@@ -187,7 +206,7 @@ function $worker() {
 
   /* @private */
   function _makeVarName(name) {
-    return 'var ' + name + ' = ';
+    return 'self.' + name + ' = ';
   }
 
   /**
