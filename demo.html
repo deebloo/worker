@@ -9,7 +9,7 @@
 		<script src="src/worker.js"></script>
 		<script>
       // Create your web worker
-			var myWorker = $worker.create(function() {
+			var myWorker = $worker().create(function() {
         request('/bower.json', function(data) {
           self.postMessage(data);
         });
