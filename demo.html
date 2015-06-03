@@ -8,52 +8,28 @@
     <h1>Look In The Console</h1>
 		<script src="src/worker.js"></script>
 		<script>
-      //Instantiate $worker
-      var workers = $worker();
+      // Create worker instance
+      var worker = $worker();
 
-			var myWorker = $worker().create(function() {
-        request('/bower.json', function(data) {
-          self.postMessage(data);
-        });
-
-        request('/package.json', function(data) {
-          self.postMessage(data);
-        });
-	    });
-
-      // Load our request method into the worker
-	    myWorker.loadScripts({
-	    	request: request
-	    });
-
-      // Listen for the data to come back
-	    myWorker.onmessage = function(res) {
-        console.log(res.data);
-	    };
-
-      // Fire off the worker
-	    myWorker.postMessage();
-
-      // Use the same method outside of the worker!
-      request('/demo.html', function(data) {
-        console.log(data);
+      // override the onmessage method for ALL workers from given instance
+      worker.extend({
+        onmessage: function(e) {
+          console.log(e.data);
+        }
       });
 
-      // My Request method
-      function request(path, cb) {
-        var oReq = new XMLHttpRequest();
+      // create web worker from worker instance
+      var worker1 = worker.create(function() {
+        self.postMessage('Hello World');
+      });
 
-        oReq.onload = function() {
-          cb({
-            key: path,
-            content: this.responseText
-          });
-        };
+      // create another web worker from worker instance
+      var worker2 = worker.create(function() {
+        self.postMessage('Goodbye World');
+      });
 
-        oReq.open('GET', 'http://localhost:8080' + path, true);
-
-        oReq.send();
-      }
+      // Post to ALL workers in instance
+      worker.postMessage();
 		</script>
 	</body>
 </html>

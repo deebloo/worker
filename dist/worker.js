@@ -134,8 +134,6 @@ function $worker() {
     }
   };
 
-  var protectedMethods = Object.keys(proto);
-
   /**
    * @name create
    *
@@ -152,7 +150,7 @@ function $worker() {
    *
    * @public
    */
-   function create(method) {
+  function create(method) {
     var createdWorker = Object.create(proto);
 
     createdWorker.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
@@ -185,11 +183,53 @@ function $worker() {
   function extend(obj) {
     for(var key in obj) {
       if(obj.hasOwnProperty(key)) {
-        if(protectedMethods.indexOf(key) < 0) {
-          proto[key] = obj[key]
-        }
+        proto[key] = obj[key]
       }
     }
+  }
+
+  /**
+   * @name postMessage
+   *
+   * @memberof $worker
+   *
+   * @description
+   * post data to ALL of the workers belonging to this instance
+   *
+   * @param data
+   */
+  function postMessage(data) {
+    var current;
+
+    for(var i = 0, len = workers.length; i < len; i++) {
+      current = workers[i];
+
+      current.shell.postMessage(data);
+
+      current.shell.onmessage = current.onmessage;
+
+      current.shell.onerror = current.onerror;
+    }
+  }
+
+  /**
+   * @name terminate
+   *
+   * @memberof $worker
+   *
+   * @description
+   * terminate all workers
+   */
+  function terminate() {
+    var current;
+
+    for(var i = 0, len = workers.length; i < len; i++) {
+      current = workers[i];
+
+      current.shell.terminate();
+    }
+
+    workers.length = 0;
   }
 
   /**
@@ -219,6 +259,8 @@ function $worker() {
   return {
     create: create,
     extend: extend,
+    postMessage: postMessage,
+    terminate: terminate,
     list: list
   }
 
