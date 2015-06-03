@@ -32,7 +32,7 @@ myWorker.postMessage([1,2,3,4,5]);
 
 ### API
 
-### $worker
+#### $worker
 factory - creates instance of $worker that can then be used to create web workers
 
 Example:
@@ -60,7 +60,7 @@ var myWorker = $worker().create(function(e) {
 });
 ```
 
-### $worker().extend()
+#### $worker().extend()
 extends that worker instances prototypes. Automatically updates all new and current worker objects.
 
 Example:
@@ -77,7 +77,7 @@ var myWorker = worker.create( ... );
 myWorker.bar() === true
 ```
 
-### $worker().list()
+#### $worker().list()
 Returns a list of all of the created workers
 
 Example:
@@ -159,7 +159,7 @@ myWorker.removeScripts('hello', 'goodbye');
 ```
 
 
-### Complete Example
+#### Complete Example
 ```JS
 var group = $worker();
 
