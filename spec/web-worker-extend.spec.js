@@ -2,7 +2,9 @@ describe('web-worker-extend', function() {
   var myWorker, myWorker2, myWorker3, batch;
 
   beforeEach(function() {
-    batch = $worker();
+    batch = $worker().extend({
+      hello: 'world'
+    });
 
     myWorker = batch.create(function() {
       self.postMessage('Hello World');
