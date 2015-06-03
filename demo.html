@@ -9,10 +9,7 @@
 		<script src="src/worker.js"></script>
 		<script>
       // Create worker instance
-      var worker = $worker();
-
-      // override the onmessage method for ALL workers from given instance
-      worker.extend({
+      var worker = $worker().extend({
         onmessage: function(e) {
           console.log(e.data);
         }
