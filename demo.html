@@ -12,7 +12,9 @@
       var worker = $worker().extend({
         onmessage: function(e) {
           console.log(e.data);
-        }
+        },
+        foo: true,
+        hello: 'world'
       });
 
       // create web worker from worker instance
@@ -24,6 +26,12 @@
       var worker2 = worker.create(function() {
         self.postMessage('Goodbye World');
       });
+
+      worker.extend({
+        bar: true
+      });
+
+      console.log(worker1);
 
       // Post to ALL workers in instance
       worker.postMessage();

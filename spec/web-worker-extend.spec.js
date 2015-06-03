@@ -25,6 +25,10 @@ describe('web-worker-extend', function() {
   });
 
   it('should extend the entire prototype', function() {
+    expect(myWorker.hello).toBe('world');
+    expect(myWorker2.hello).toBe('world');
+    expect(myWorker3.hello).toBe(undefined);
+
     expect(myWorker.foo).toBe(undefined);
     expect(myWorker2.foo).toBe(undefined);
     expect(myWorker3.foo).toBe(undefined);
