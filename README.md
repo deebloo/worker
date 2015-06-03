@@ -90,7 +90,7 @@ workerGroup.create( ... );
 workerGroup.list().length === 2
 ```
 
-#### $worker().create().postMessage
+#### $worker().create().postMessage()
 Post data for the web worker to use. Runs the web worker
 
 | Arg     | Type    | description |
