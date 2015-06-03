@@ -65,16 +65,16 @@ extends that worker instances prototypes. Automatically updates all new and curr
 
 Example:
 ```JS
-var worker = $worker();
+var worker = $worker().extend({
+  foo: true,
+  bar: function() {
+    return true;
+  }
+});
 
 var myWorker = worker.create( ... );
 
-worker.extend({
-  foo: true,
-  bar: true
-});
-
-myWorker.foo === true
+myWorker.bar() === true
 ```
 
 ### $worker().list()
