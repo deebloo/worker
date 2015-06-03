@@ -134,14 +134,6 @@ function $worker() {
     }
   };
 
-  var $Worker = function(method) {
-    this.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
-    this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
-    this.shell = new Worker(urlBuilder(this.blob));
-  };
-
-  $Worker.prototype = proto;
-
   /**
    * @name create
    *
@@ -157,7 +149,11 @@ function $worker() {
    * @public
    */
   function create(method) {
-    var createdWorker = new $Worker(method);
+    var createdWorker = Object.create(proto);
+
+    createdWorker.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
+    createdWorker.blob = new Blob(createdWorker.blobArray, { type: 'text/javascript' });
+    createdWorker.shell = new Worker(urlBuilder(createdWorker.blob));
 
     workers.push(createdWorker);
 
@@ -214,6 +210,8 @@ function $worker() {
 
       current.shell.onerror = current.onerror;
     }
+
+    return this;
   }
 
   /**
@@ -234,6 +232,8 @@ function $worker() {
     }
 
     workers.length = 0;
+
+    return this;
   }
 
   /**

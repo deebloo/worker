@@ -146,8 +146,6 @@ function $worker() {
    *   self.postMessage(e.data + 1);
    * });
    *
-   * @return {proto}
-   *
    * @public
    */
   function create(method) {
@@ -186,6 +184,8 @@ function $worker() {
         proto[key] = obj[key]
       }
     }
+
+    return this;
   }
 
   /**
@@ -210,6 +210,8 @@ function $worker() {
 
       current.shell.onerror = current.onerror;
     }
+
+    return this;
   }
 
   /**
@@ -230,6 +232,8 @@ function $worker() {
     }
 
     workers.length = 0;
+
+    return this;
   }
 
   /**
