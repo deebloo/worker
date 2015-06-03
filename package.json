@@ -1,6 +1,6 @@
 {
   "name": "worker",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "a tiny micro library to make using web workers easier",
   "main": "src/worker.js",
   "scripts": {
