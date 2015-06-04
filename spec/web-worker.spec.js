@@ -21,6 +21,10 @@ describe('web-worker', function() {
     myWorker.postMessage({length: 1024, min: 0, max: 9999});
   });
 
+  afterEach(function() {
+    myWorker.terminate();
+  });
+
   it('should create a big array', function() {
     expect(result.length).toBe(1024);
   });

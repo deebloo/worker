@@ -34,26 +34,7 @@ function $worker() {
      */
     onerror: function() {},
 
-    /**
-     * @name postMessage
-     *
-     * @memberof $worker
-     *
-     * @description
-     * send data tp the worker and assign the onmessage and on error listeners
-     *
-     * @example
-     * myWorker.postMessage(1988);
-     *
-     * @param data
-     */
-    postMessage: function postMessage(data) {
-      this.shell.postMessage(data);
-
-      this.shell.onmessage = this.onmessage;
-
-      this.shell.onerror = this.onerror;
-    },
+    postMessage: _postMessage,
 
     /**
      * @name terminate
@@ -99,13 +80,11 @@ function $worker() {
 
           this.blobArray.unshift(val.toString());
 
-          this.blobArray.unshift(_makeVarName(key));
+          this.blobArray.unshift(__makeVarName(key));
         }
       }
 
-      this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
-
-      this.shell = new Worker(urlBuilder(this.blob));
+      __createWebWorker.call(this);
     },
     /**
      * @name removeScripts
@@ -123,14 +102,12 @@ function $worker() {
       var index;
 
       for(var i = 0, len = arguments.length; i < len; i++) {
-        index = this.blobArray.indexOf(_makeVarName(arguments[i]));
+        index = this.blobArray.indexOf(__makeVarName(arguments[i]));
 
         this.blobArray.splice(index, 3);
       }
 
-      this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
-
-      this.shell = new Worker(urlBuilder(this.blob));
+      __createWebWorker.call(this);
     }
   };
 
@@ -149,15 +126,15 @@ function $worker() {
    * @public
    */
   function create(method) {
-    var createdWorker = Object.create(proto);
+    var obj = Object.create(proto);
 
-    createdWorker.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
-    createdWorker.blob = new Blob(createdWorker.blobArray, { type: 'text/javascript' });
-    createdWorker.shell = new Worker(urlBuilder(createdWorker.blob));
+    obj.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
 
-    workers.push(createdWorker);
+    __createWebWorker.call(obj);
 
-    return createdWorker;
+    workers.push(obj);
+
+    return obj;
   }
 
   /**
@@ -199,16 +176,8 @@ function $worker() {
    * @param data
    */
   function postMessage(data) {
-    var current;
-
     for(var i = 0, len = workers.length; i < len; i++) {
-      current = workers[i];
-
-      current.shell.postMessage(data);
-
-      current.shell.onmessage = current.onmessage;
-
-      current.shell.onerror = current.onerror;
+      _postMessage.call(workers[i], data);
     }
 
     return this;
@@ -223,12 +192,8 @@ function $worker() {
    * terminate all workers
    */
   function terminate() {
-    var current;
-
     for(var i = 0, len = workers.length; i < len; i++) {
-      current = workers[i];
-
-      current.shell.terminate();
+      workers[i].shell.terminate();
     }
 
     workers.length = 0;
@@ -248,18 +213,58 @@ function $worker() {
     return workers;
   }
 
-  /* @private */
-  function _makeVarName(name) {
-    return 'self.' + name + ' = ';
+  /**
+   * @name postMessage
+   *
+   * @memberof $worker
+   *
+   * @description
+   * send data tp the worker and assign the onmessage and on error listeners
+   *
+   * @example
+   * myWorker.postMessage(1988);
+   *
+   * @param {*} data
+   *
+   * @protected
+   */
+  function _postMessage(data) {
+    this.shell.postMessage(data);
+
+    this.shell.onmessage = this.onmessage;
+
+    this.shell.onerror = this.onerror;
   }
 
   /**
-   * Expose public methods
-   * 
-   * @param {Function} create
-   * @param {Function} extend
-   * @param {Function} viewAll
+   * @name __createWebWorker
+   *
+   * @memberof $worker
+   *
+   * @private
    */
+  function __createWebWorker() {
+    this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
+
+    this.shell = new Worker(urlBuilder(this.blob));
+  }
+
+  /**
+   * @name __makeVarName
+   *
+   * @memberof $worker
+   *
+   * @param name
+   *
+   * @return {string}
+   *
+   * @private
+   */
+  function __makeVarName(name) {
+    return 'self.' + name + ' = ';
+  }
+
+  /* Expose public methods */
   return {
     create: create,
     extend: extend,

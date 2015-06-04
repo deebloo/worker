@@ -9,7 +9,7 @@
 		<script src="src/worker.js"></script>
 		<script>
       // Create worker instance
-      var worker = $worker().extend({
+      var workers = $worker().extend({
         onmessage: function(e) {
           console.log(e.data);
         },
@@ -18,23 +18,23 @@
       });
 
       // create web worker from worker instance
-      var worker1 = worker.create(function() {
+      var worker1 = workers.create(function() {
         self.postMessage('Hello World');
       });
 
       // create another web worker from worker instance
-      var worker2 = worker.create(function() {
+      var worker2 = workers.create(function() {
         self.postMessage('Goodbye World');
       });
 
-      worker.extend({
+      workers.extend({
         bar: true
       });
 
       console.log(worker1);
 
       // Post to ALL workers in instance
-      worker.postMessage();
+      workers.postMessage();
 		</script>
 	</body>
 </html>
