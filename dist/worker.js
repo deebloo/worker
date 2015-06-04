@@ -10,8 +10,6 @@
  * no separate file for scripts you want to include in the worker. Have 15 workers defined and you want to change a property on all of them?
  * No problem. All workers inherit from the same object so you can make changes across the board
  *
- * filter.postMessage([ ... ])
- *
  * @returns {{create: Function, extend: Function, postMessage: Function, terminate: Function, list: Function}}
  */
 function $worker() {
