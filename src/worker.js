@@ -10,17 +10,6 @@
  * no separate file for scripts you want to include in the worker. Have 15 workers defined and you want to change a property on all of them?
  * No problem. All workers inherit from the same object so you can make changes across the board
  *
- * @example
- * var onmessage = function(e) {
- *   console.log(e.data);
- * }
- *
- * var filter = $worker().extend({ onmessage: onmessage}}).create(function(e) {
- *   self.postMessage(e.data.filter(val) {
- *     return val.foo === true;
- *   });
- * });
- *
  * filter.postMessage([ ... ])
  *
  * @returns {{create: Function, extend: Function, postMessage: Function, terminate: Function, list: Function}}
@@ -30,6 +19,11 @@ function $worker() {
   var urlBuilder = window.URL.createObjectURL,
       workers = [];
 
+  /**
+   * @name proto
+   *
+   * @type {{postMessage: $worker._postMessage, onmessage: Function, onerror: Function, terminate: Function, loadScripts: Function, removeScripts: Function}}
+   */
   var proto = {
     /* reference postMessage */
     postMessage: _postMessage,
@@ -43,7 +37,7 @@ function $worker() {
     /**
      * @name terminate
      *
-     * @memberof $worker
+     * @memberof proto
      *
      * @description
      * terminate the worker. (all stop does not finish or allow cleanup)
@@ -60,7 +54,7 @@ function $worker() {
     /**
      * @name loadScripts
      *
-     * @memberof $worker
+     * @memberof proto
      *
      * @description
      * Allows the loading of scripts into the worker for use.
@@ -93,7 +87,7 @@ function $worker() {
     /**
      * @name removeScripts
      *
-     * @memberof $worker
+     * @memberof proto
      *
      * @description
      * remove scripts that have been loaded into the worker.
