@@ -1,10 +1,27 @@
 /**
  * @name $worker
  *
+ * @author Danny Blue
+ *
+ * @license MIT
+ *
  * @description
  * A small micro library for assisting with the creation of web workers. No need for separate scripts for the worker itself and
  * no separate file for scripts you want to include in the worker. Have 15 workers defined and you want to change a property on all of them?
  * No problem. All workers inherit from the same object so you can make changes across the board
+ *
+ * @example
+ * var onmessage = function(e) {
+ *   console.log(e.data);
+ * }
+ *
+ * var filter = $worker().extend({ onmessage: onmessage}}).create(function(e) {
+ *   self.postMessage(e.data.filter(val) {
+ *     return val.foo === true;
+ *   });
+ * });
+ *
+ * filter.postMessage([ ... ])
  *
  * @returns {{create: Function, extend: Function, postMessage: Function, terminate: Function, list: Function}}
  */
