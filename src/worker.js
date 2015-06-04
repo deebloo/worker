@@ -14,27 +14,14 @@ function $worker() {
       workers = [];
 
   var proto = {
-    /**
-     * @name onmessage
-     *
-     * @memberof $worker
-     *
-     * @description
-     * overwrite this method to listen for data coming back from the worker
-     */
+    /* reference postMessage */
+    postMessage: _postMessage,
+
+    /* override to listen for message */
     onmessage: function() {},
 
-    /**
-     * @name onerror
-     *
-     * @memberof $worker
-     *
-     * @description
-     * overwrite this method to listen for errors coming from the worker
-     */
+    /* override to listen for error */
     onerror: function() {},
-
-    postMessage: _postMessage,
 
     /**
      * @name terminate
