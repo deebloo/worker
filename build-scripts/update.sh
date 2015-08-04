@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "########## running unit tests"
-npm run test
+npm test
 
 echo "########## uglify the code"
 npm run uglify
