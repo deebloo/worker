@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# to commit - npm run update 'Comment'
+# new release - npm run update 'Comment' major|minor|patch
+
 echo "########## running unit tests"
 npm test
 
