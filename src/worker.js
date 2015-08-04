@@ -1,5 +1,5 @@
 /**
- * @name $worker
+ * @namespace $worker
  *
  * @author Danny Blue
  *
@@ -14,8 +14,8 @@
  */
 function $worker() {
 
-  // check to make sure we can create an object url
-  var urlBuilder = (function () {
+  /* @private */
+  var __urlBuilder = (function () {
     try {
       return window.URL.createObjectURL;
     }
@@ -24,14 +24,17 @@ function $worker() {
     }
   })();
 
-  var workers = [];
+  /* @protected */
+  var _workers = [];
 
   /**
    * The prototype object to be used when creating a new worker
    *
    * @type {{postMessage: $worker._postMessage, onmessage: Function, onerror: Function, terminate: Function, loadScripts: Function, removeScripts: Function}}
+   *
+   * @private
    */
-  var proto = {
+  var __proto = {
     /* reference postMessage */
     postMessage: _postMessage,
 
@@ -46,13 +49,13 @@ function $worker() {
     /**
      * terminate the worker. (all stop does not finish or allow cleanup)
      *
-     * @memberof proto
+     * @memberof __proto
      *
      * @example
      * myWorker.terminate();
      */
     terminate: function terminate() {
-      workers.splice(workers.indexOf(this), 1); // remove the worker for the list
+      _workers.splice(_workers.indexOf(this), 1); // remove the worker for the list
 
       this.shell.terminate(); // terminate the actual worker
     },
@@ -61,7 +64,7 @@ function $worker() {
      * Allows the loading of scripts into the worker for use.
      * NOTE: this will rebuild the worker. should not be done while the worker is running
      *
-     * @memberof proto
+     * @memberof __proto
      *
      * @example
      * myWorker.loadScripts({
@@ -92,7 +95,7 @@ function $worker() {
      * remove scripts that have been loaded into the worker.
      * NOTE: this will rebuild the worker. should not be done while the worker is running
      *
-     * @memberof proto
+     * @memberof __proto
      *
      * @example
      * myWorker.removeScripts('hello', 'world');
@@ -113,23 +116,23 @@ function $worker() {
   /**
    * @memberof $worker
    *
-   * @param method
+   * @param {Function} method - function containing your web worker code
    *
    * @example
-   * var myWorker = $worker.create(function(e.data) {
+   * var myWorker = $worker().create(function(e.data) {
    *   self.postMessage(e.data + 1);
    * });
    *
    * @public
    */
   function create(method) {
-    var obj = Object.create(proto);
+    var obj = Object.create(__proto);
 
     obj.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
 
     __createWebWorker.call(obj);
 
-    workers.push(obj);
+    _workers.push(obj);
 
     return obj;
   }
@@ -139,18 +142,18 @@ function $worker() {
    *
    * @memberof $worker
    *
+   * @param {Object} obj - the object add to the worker prototype
+   *
    * @example
-   * $worker.extend({
+   * var myWorkers = $worker().extend({
    *   newProp1: function() {
-   *     return 'I am a new prototype property'
+   *     return 'I am a new __prototype property'
    *   },
    *   newProp2: 'We are workers'
    * });
-   *
-   * @public
    */
   function extend(obj) {
-    __extend(proto, obj);
+    __extend(__proto, obj);
 
     return this;
   }
@@ -160,11 +163,16 @@ function $worker() {
    *
    * @memberof $worker
    *
-   * @param data
+   * @param {Object|String|Array|Number} data - the data to send to the web worker
+   *
+   * @example
+   * $worker().postMessage({
+   *   hello: 'world'
+   * });
    */
   function postMessage(data) {
-    for (var i = 0, len = workers.length; i < len; i++) {
-      _postMessage.call(workers[i], data);
+    for (var i = 0, len = _workers.length; i < len; i++) {
+      _postMessage.call(_workers[i], data);
     }
 
     return this;
@@ -175,14 +183,15 @@ function $worker() {
    *
    * @memberof $worker
    *
-   * @description
+   * @example
+   * $worker().terminate();
    */
   function terminate() {
-    for (var i = 0, len = workers.length; i < len; i++) {
-      workers[i].shell.terminate();
+    for (var i = 0, len = _workers.length; i < len; i++) {
+      _workers[i].shell.terminate();
     }
 
-    workers.length = 0;
+    _workers.length = 0;
 
     return this;
   }
@@ -191,9 +200,14 @@ function $worker() {
    * return the current list of active workers
    *
    * @memberof $worker
+   *
+   * @example
+   * $worker().list();
+   *
+   * @returns {Array}
    */
   function list() {
-    return workers;
+    return _workers;
   }
 
   /**
@@ -204,7 +218,7 @@ function $worker() {
    * @example
    * myWorker.postMessage(1988);
    *
-   * @param {Object|String|Array|Number} data
+   * @param {Object|String|Array|Number} data - the data to send to the web worker
    *
    * @protected
    */
@@ -230,7 +244,7 @@ function $worker() {
   function __createWebWorker() {
     this.blob = new Blob(this.blobArray, {type: 'text/javascript'});
 
-    this.shell = new Worker(urlBuilder(this.blob));
+    this.shell = new Worker(__urlBuilder(this.blob));
   }
 
   /**

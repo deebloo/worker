@@ -5,7 +5,7 @@
   "main": "src/worker.js",
   "scripts": {
     "update": "build-scripts/update.sh",
-    "docs": "node node_modules/jsdoc/jsdoc.js src/ -d docs",
+    "docs": "node node_modules/jsdoc/jsdoc.js src/ -d docs -r README.md",
     "test": "node node_modules/karma/bin/karma start",
     "uglify": "node node_modules/uglifyjs/bin/uglifyjs ./src/worker.js -o ./dist/worker.min.js --compress --mangle"
   },
