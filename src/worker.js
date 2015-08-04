@@ -14,11 +14,20 @@
  */
 function $worker() {
 
-  var urlBuilder = window.URL.createObjectURL,
-      workers = [];
+  // check to make sure we can create an object url
+  var urlBuilder = (function () {
+    try {
+      return window.URL.createObjectURL;
+    }
+    catch (e) {
+      throw new Error(e);
+    }
+  })();
+
+  var workers = [];
 
   /**
-   * @name proto
+   * The prototype object to be used when creating a new worker
    *
    * @type {{postMessage: $worker._postMessage, onmessage: Function, onerror: Function, terminate: Function, loadScripts: Function, removeScripts: Function}}
    */
@@ -27,18 +36,17 @@ function $worker() {
     postMessage: _postMessage,
 
     /* override to listen for message */
-    onmessage: function() {},
+    onmessage: function () {
+    },
 
     /* override to listen for error */
-    onerror: function() {},
+    onerror: function () {
+    },
 
     /**
-     * @name terminate
+     * terminate the worker. (all stop does not finish or allow cleanup)
      *
      * @memberof proto
-     *
-     * @description
-     * terminate the worker. (all stop does not finish or allow cleanup)
      *
      * @example
      * myWorker.terminate();
@@ -50,25 +58,22 @@ function $worker() {
     },
 
     /**
-     * @name loadScripts
-     *
-     * @memberof proto
-     *
-     * @description
      * Allows the loading of scripts into the worker for use.
      * NOTE: this will rebuild the worker. should not be done while the worker is running
+     *
+     * @memberof proto
      *
      * @example
      * myWorker.loadScripts({
      *   hello: function() { return 'hello'; },
      *   world: function() { return 'world' }
-     * })
+     * });
      */
     loadScripts: function loadScripts(scripts) {
       var key, val;
 
-      for(var name in scripts) {
-        if(scripts.hasOwnProperty(name)) {
+      for (var name in scripts) {
+        if (scripts.hasOwnProperty(name)) {
           key = name;
           val = scripts[name];
 
@@ -82,14 +87,12 @@ function $worker() {
 
       __createWebWorker.call(this);
     },
+
     /**
-     * @name removeScripts
-     *
-     * @memberof proto
-     *
-     * @description
      * remove scripts that have been loaded into the worker.
      * NOTE: this will rebuild the worker. should not be done while the worker is running
+     *
+     * @memberof proto
      *
      * @example
      * myWorker.removeScripts('hello', 'world');
@@ -97,7 +100,7 @@ function $worker() {
     removeScripts: function removeScripts() {
       var index;
 
-      for(var i = 0, len = arguments.length; i < len; i++) {
+      for (var i = 0, len = arguments.length; i < len; i++) {
         index = this.blobArray.indexOf(__makeVarName(arguments[i]));
 
         this.blobArray.splice(index, 3);
@@ -108,8 +111,6 @@ function $worker() {
   };
 
   /**
-   * @name create
-   *
    * @memberof $worker
    *
    * @param method
@@ -134,12 +135,9 @@ function $worker() {
   }
 
   /**
-   * @name extend
+   * Extend the base prototype. Properties will be inherited by ALL currently created and new workers. The base prototype methods cannot be overridden.
    *
    * @memberof $worker
-   *
-   * @description
-   * Extend the base prototype. Properties will be inherited by ALL currently created and new workers. The base prototype methods cannot be overridden.
    *
    * @example
    * $worker.extend({
@@ -152,27 +150,20 @@ function $worker() {
    * @public
    */
   function extend(obj) {
-    for(var key in obj) {
-      if(obj.hasOwnProperty(key)) {
-        proto[key] = obj[key]
-      }
-    }
+    __extend(proto, obj);
 
     return this;
   }
 
   /**
-   * @name postMessage
+   * post data to ALL of the workers belonging to this instance
    *
    * @memberof $worker
-   *
-   * @description
-   * post data to ALL of the workers belonging to this instance
    *
    * @param data
    */
   function postMessage(data) {
-    for(var i = 0, len = workers.length; i < len; i++) {
+    for (var i = 0, len = workers.length; i < len; i++) {
       _postMessage.call(workers[i], data);
     }
 
@@ -180,15 +171,14 @@ function $worker() {
   }
 
   /**
-   * @name terminate
+   * terminate all workers
    *
    * @memberof $worker
    *
    * @description
-   * terminate all workers
    */
   function terminate() {
-    for(var i = 0, len = workers.length; i < len; i++) {
+    for (var i = 0, len = workers.length; i < len; i++) {
       workers[i].shell.terminate();
     }
 
@@ -198,34 +188,34 @@ function $worker() {
   }
 
   /**
-   * @name list
+   * return the current list of active workers
    *
    * @memberof $worker
-   * 
-   * @description
-   * return the current list of active workers
    */
   function list() {
     return workers;
   }
 
   /**
-   * @name postMessage
+   * send data tp the worker and assign the onmessage and on error listeners
    *
    * @memberof $worker
-   *
-   * @description
-   * send data tp the worker and assign the onmessage and on error listeners
    *
    * @example
    * myWorker.postMessage(1988);
    *
-   * @param {*} data
+   * @param {Object|String|Array|Number} data
    *
    * @protected
    */
   function _postMessage(data) {
-    this.shell.postMessage(data);
+    data = data || {};
+
+    var postMessageData = __extend({
+      _src: window.location.protocol + '//' + window.location.host
+    }, data);
+
+    this.shell.postMessage(postMessageData);
 
     this.shell.onmessage = this.onmessage;
 
@@ -233,26 +223,42 @@ function $worker() {
   }
 
   /**
-   * @name __createWebWorker
-   *
    * @memberof $worker
    *
    * @private
    */
   function __createWebWorker() {
-    this.blob = new Blob(this.blobArray, { type: 'text/javascript' });
+    this.blob = new Blob(this.blobArray, {type: 'text/javascript'});
 
     this.shell = new Worker(urlBuilder(this.blob));
   }
 
   /**
-   * @name __makeVarName
+   * Extend an object
    *
+   * @memberof $worker
+   *
+   * @param {Object} target
+   * @param {Object} src
+   *
+   * @private
+   */
+  function __extend(target, src) {
+    for (var key in src) {
+      if (src.hasOwnProperty(key)) {
+        target[key] = src[key]
+      }
+    }
+
+    return target;
+  }
+
+  /**
    * @memberof $worker
    *
    * @param name
    *
-   * @return {string}
+   * @return {String}
    *
    * @private
    */
@@ -262,11 +268,11 @@ function $worker() {
 
   /* Expose public methods */
   return {
-    create: create,
-    extend: extend,
+    create     : create,
+    extend     : extend,
     postMessage: postMessage,
-    terminate: terminate,
-    list: list
-  }
+    terminate  : terminate,
+    list       : list
+  };
 
 }

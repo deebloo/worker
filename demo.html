@@ -18,7 +18,9 @@
       });
 
       // create web worker from worker instance
-      var worker1 = workers.create(function() {
+      var worker1 = workers.create(function(e) {
+        console.log(e);
+
         self.postMessage('Hello World');
       });
 
