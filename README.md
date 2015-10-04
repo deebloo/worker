@@ -2,6 +2,8 @@
 
 A tiny micro library to help make using web workers easier.
 
+NOTE: I may use ES2015 features such as arrow function for brevities sake
+
 For more info on web workers look [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
 
 ### Install
@@ -13,21 +15,19 @@ bower install --save worker
 ### Basic Usage
 
 ```JS
-var myWorker = $worker().create(function(e) {
-  var sum = 0;
-  
-  e.data.forEach(function(int) {
-    sum += int;
-  });
-  
-  self.postMessage(sum);
-});
-
-myWorker.onmessage = function(data) {
-  console.log(data);
-};
-
-myWorker.postMessage([1,2,3,4,5]);
+$worker()
+  .create((e) => {
+    var sum = 0;
+    
+    e.data.forEach(function(int) {
+      sum += int;
+    });
+    
+    self.postMessage(sum);
+  })
+  .success(data => console.log(data))
+  .error(err => console.error(err))
+  .run([1,2,3,4,5]);
 ```
 
 ### API
@@ -49,7 +49,7 @@ creates a new web worker
 
 Example:
 ```JS
-var myWorker = $worker().create(function(e) {
+var myWorker = $worker().create(e => {
   var sum = 0;
   
   e.data.forEach(function(int) {
@@ -90,7 +90,7 @@ workerGroup.create( ... );
 workerGroup.list().length === 2
 ```
 
-#### $worker().create().postMessage()
+#### $worker().create().run()
 Post data for the web worker to use. Runs the web worker
 
 | Arg     | Type    | description |
@@ -99,12 +99,12 @@ Post data for the web worker to use. Runs the web worker
 
 Example:
 ```JS
-var myWorker = $worker().create( ... );
-
-myWorker.postMessage([ ...somedata... ]);
+$worker()
+  .create(e => self.postMessage(e.data))
+  .run([ ...somedata]);
 ```
 
-#### $worker().create().onmessage
+#### $worker().create().success()
 Override this method. This method is called whenever your $worker posts data back.
 
 | Arg     | Type    | description |
@@ -113,11 +113,10 @@ Override this method. This method is called whenever your $worker posts data bac
 
 Example:
 ```JS
-var myWorker = $worker().create( ... );
-
-myWorker.onmessage = function(e) {
-  console.log(e.data)
-}
+$worker()
+  .create(e => self.postMessage(e.data))
+  .success(res => console.log(res.data))
+  .run([ ...somedata]);
 ```
 
 #### $worker().create().loadScripts()
@@ -130,12 +129,12 @@ NOTE: anything other then functions should be passed in with postMessage
 | *  | Object | A map of functions and the name they should be stored under  |
 
 ```JS
-var myWorker = $worker().create(function() {
+
+$worker().create(() => {
   var hello = hello();
   var goodbye = goodbye();
-});
-
-myWorker.loadScripts({
+})
+.loadScripts({
   hello: function() {
     return 'hello';
   }, 
@@ -161,28 +160,21 @@ myWorker.removeScripts('hello', 'goodbye');
 
 #### Complete Example
 ```JS
+// A group of web workers
 var group = $worker();
 
-var myWorker = group.create(function(e) {
+var myWorker = group.create(e => {
   var foo = [], min = e.data.min, max = e.data.max;
   
-  for (var i = 0; i < e.data.length; i++) {
-    foo.push(Math.floor(Math.random() * (max - min)) + min);
-  }
-  
-  // function passed in from the loadScripts api
-  hello();
-
+  e.data.length.forEach(() => foo.push(Math.floor(Math.random()*(max-min))+min));
+  self.hello();
   self.postMessage(foo);
-});
-
-myWorker.loadScripts({
-  'hello': function hello() { console.log('yay')}
-});
-
-myWorker.onmessage = function(data) {
-  result = data;
-};
+})
+.loadScripts({
+  'hello': () => console.log('yay')
+})
+.success(res => results = res.data)
+.error(err => throw new Error());
 
 myWorker.postMessage({length: 1024, min: 0, max: 9999});
 ```
