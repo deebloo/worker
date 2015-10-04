@@ -9,13 +9,14 @@
 		<script src="src/worker.js"></script>
 		<script>
       // Create worker instance
-      var workers = $worker().extend({
-        onmessage: function(e) {
+      var workers = $worker()
+        .extend({
+          foo: true,
+          hello: 'world'
+        })
+        .success(function (e) {
           console.log(e.data);
-        },
-        foo: true,
-        hello: 'world'
-      });
+        });
 
       // create web worker from worker instance
       var worker1 = workers.create(function(e) {
@@ -35,7 +36,6 @@
 
       console.log(worker1);
 
-      // Post to ALL workers in instance
       workers.postMessage();
 		</script>
 	</body>

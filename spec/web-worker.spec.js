@@ -2,26 +2,28 @@ describe('web-worker', function() {
   var myWorker, result;
 
   beforeEach(function(done) {
-    myWorker = $worker().create(function(e) {
-      var foo = [], min = e.data.min, max = e.data.max;
+    myWorker = $worker()
+      .create(function(e) {
+        var foo = [], min = e.data.min, max = e.data.max;
 
-      for (var i = 0; i < e.data.length; i++) {
-        foo.push(Math.floor(Math.random() * (max - min)) + min);
-      }
+        for (var i = 0; i < e.data.length; i++) {
+          foo.push(Math.floor(Math.random() * (max - min)) + min);
+        }
 
-      self.postMessage({
-        array: foo,
-        url: e.data._src
-      });
-    });
+        self.postMessage({
+          array: foo,
+          url: e.data._src
+        });
+      })
+      .success(function (res) {
+        result = res.data;
 
-    myWorker.onmessage = function(res) {
-      result = res.data;
-
-      done();
-    };
-
-    myWorker.postMessage({length: 1024, min: 0, max: 9999});
+        done();
+      })
+      .error(function () {
+        done();
+      })
+      .run({length: 1024, min: 0, max: 9999});
   });
 
   afterEach(function() {

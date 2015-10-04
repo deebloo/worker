@@ -15,15 +15,15 @@ describe('web-worker-load-scripts', function() {
       }
     });
 
-    myWorker.onmessage = function(res) {
+    myWorker.success(function(res) {
       result = res.data;
 
       myWorker.removeScripts('hello', 'world');
 
       done();
-    };
+    });
 
-    myWorker.postMessage();
+    myWorker.run();
   });
 
   afterEach(function() {

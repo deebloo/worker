@@ -9,70 +9,73 @@
  * A small micro library for assisting with the creation of web workers. No need for separate scripts for the worker itself and
  * no separate file for scripts you want to include in the worker. Have 15 workers defined and you want to change a property on all of them?
  * No problem. All workers inherit from the same object so you can make changes across the board
- *
- * @returns {{create: Function, extend: Function, postMessage: Function, terminate: Function, list: Function}}
  */
 function $worker() {
-
-  /* @private */
-  var __urlBuilder = (function () {
-    try {
-      return window.URL.createObjectURL;
-    }
-    catch (e) {
-      throw new Error(e);
-    }
-  })();
-
-  /* @protected */
   var _workers = [];
 
-  /**
-   * The prototype object to be used when creating a new worker
-   *
-   * @type {{postMessage: $worker._postMessage, onmessage: Function, onerror: Function, terminate: Function, loadScripts: Function, removeScripts: Function}}
-   *
-   * @private
-   */
-  var __proto = {
-    /* reference postMessage */
-    postMessage: _postMessage,
+  var _worker = {
+    // The actual web worker
+    shell: {},
 
-    /* override to listen for message */
-    onmessage: function () {
-    },
+    // The array to be used to create a blob
+    blobArray: [],
 
-    /* override to listen for error */
-    onerror: function () {
+    /**
+     * post data to the worker
+     *
+     * @param {string|number|object|array} data
+     *
+     * @return {_worker}
+     */
+    run: function (data) {
+      _postMessage(this, data);
+
+      return this;
     },
 
     /**
-     * terminate the worker. (all stop does not finish or allow cleanup)
+     * web worker success callback. maps to the onmessage method.
      *
-     * @memberof __proto
+     * @param {function} fn - the function to call when the worker finishes
      *
-     * @example
-     * myWorker.terminate();
+     * @return {_worker}
      */
-    terminate: function terminate() {
-      _workers.splice(_workers.indexOf(this), 1); // remove the worker for the list
+    success: function (fn) {
+      this.shell.onmessage = fn;
 
-      this.shell.terminate(); // terminate the actual worker
+      return this;
     },
 
     /**
-     * Allows the loading of scripts into the worker for use.
-     * NOTE: this will rebuild the worker. should not be done while the worker is running
+     * web worker error callback.
      *
-     * @memberof __proto
+     * @param {function} fn the function to call when the worker errors
      *
-     * @example
-     * myWorker.loadScripts({
-     *   hello: function() { return 'hello'; },
-     *   world: function() { return 'world' }
-     * });
+     * @return {_worker}
      */
-    loadScripts: function loadScripts(scripts) {
+    error: function (fn) {
+      this.shell.onerror = fn;
+
+      return this;
+    },
+
+    /**
+     * terminates the worker and removes it from the list of workers
+     */
+    terminate: function () {
+      _workers.splice(_workers.indexOf(this), 1);
+
+      this.shell.terminate();
+    },
+
+    /**
+     * injects an object and assigns those values to the worker scope. rebuilds the worker
+     *
+     * @param {object} scripts - scripts to be loaded
+     *
+     * @return {_worker}
+     */
+    loadScripts: function (scripts) {
       var key, val;
 
       for (var name in scripts) {
@@ -81,183 +84,73 @@ function $worker() {
           val = scripts[name];
 
           this.blobArray.unshift(';');
-
           this.blobArray.unshift(val.toString());
-
-          this.blobArray.unshift(__makeVarName(key));
+          this.blobArray.unshift(_makeVarName(key));
         }
       }
 
-      __createWebWorker.call(this);
+      _createWebWorker(this);
+
+      return this;
     },
 
     /**
-     * remove scripts that have been loaded into the worker.
-     * NOTE: this will rebuild the worker. should not be done while the worker is running
+     * Removes scripts from the worker. rebuilds the worker
      *
-     * @memberof __proto
-     *
-     * @example
-     * myWorker.removeScripts('hello', 'world');
+     * @return {_worker}
      */
-    removeScripts: function removeScripts() {
+    removeScripts: function () {
       var index;
 
       for (var i = 0, len = arguments.length; i < len; i++) {
-        index = this.blobArray.indexOf(__makeVarName(arguments[i]));
+        index = this.blobArray.indexOf(_makeVarName(arguments[i]));
 
         this.blobArray.splice(index, 3);
       }
 
-      __createWebWorker.call(this);
+      _createWebWorker(this);
+
+      return this;
     }
   };
 
   /**
-   * @memberof $worker
+   * Creates the actual web worker
    *
-   * @param {Function} method - function containing your web worker code
-   *
-   * @example
-   * var myWorker = $worker().create(function(e.data) {
-   *   self.postMessage(e.data + 1);
-   * });
-   *
-   * @public
-   */
-  function create(method) {
-    var obj = Object.create(__proto);
-
-    obj.blobArray = ['self.onmessage = ', method.toString(), ';']; // array to be used for blob
-
-    __createWebWorker.call(obj);
-
-    _workers.push(obj);
-
-    return obj;
-  }
-
-  /**
-   * Extend the base prototype. Properties will be inherited by ALL currently created and new workers. The base prototype methods cannot be overridden.
-   *
-   * @memberof $worker
-   *
-   * @param {Object} obj - the object add to the worker prototype
-   *
-   * @example
-   * var myWorkers = $worker().extend({
-   *   newProp1: function() {
-   *     return 'I am a new __prototype property'
-   *   },
-   *   newProp2: 'We are workers'
-   * });
-   */
-  function extend(obj) {
-    __extend(__proto, obj);
-
-    return this;
-  }
-
-  /**
-   * post data to ALL of the workers belonging to this instance
-   *
-   * @memberof $worker
-   *
-   * @param {Object|String|Array|Number} data - the data to send to the web worker
-   *
-   * @example
-   * $worker().postMessage({
-   *   hello: 'world'
-   * });
-   */
-  function postMessage(data) {
-    for (var i = 0, len = _workers.length; i < len; i++) {
-      _postMessage.call(_workers[i], data);
-    }
-
-    return this;
-  }
-
-  /**
-   * terminate all workers
-   *
-   * @memberof $worker
-   *
-   * @example
-   * $worker().terminate();
-   */
-  function terminate() {
-    for (var i = 0, len = _workers.length; i < len; i++) {
-      _workers[i].shell.terminate();
-    }
-
-    _workers.length = 0;
-
-    return this;
-  }
-
-  /**
-   * return the current list of active workers
-   *
-   * @memberof $worker
-   *
-   * @example
-   * $worker().list();
-   *
-   * @returns {Array}
-   */
-  function list() {
-    return _workers;
-  }
-
-  /**
-   * send data tp the worker and assign the onmessage and on error listeners
-   *
-   * @memberof $worker
-   *
-   * @example
-   * myWorker.postMessage(1988);
-   *
-   * @param {Object|String|Array|Number} data - the data to send to the web worker
-   *
-   * @protected
-   */
-  function _postMessage(data) {
-    data = data || {};
-
-    var postMessageData = __extend({
-      _src: window.location.protocol + '//' + window.location.host
-    }, data);
-
-    this.shell.postMessage(postMessageData);
-
-    this.shell.onmessage = this.onmessage;
-
-    this.shell.onerror = this.onerror;
-  }
-
-  /**
-   * @memberof $worker
+   * @param {object} obj - the $worker object created from _workerProto
    *
    * @private
    */
-  function __createWebWorker() {
-    this.blob = new Blob(this.blobArray, {type: 'text/javascript'});
+  function _createWebWorker(obj) {
+    obj.blob = new Blob(obj.blobArray, {type: 'text/javascript'});
 
-    this.shell = new Worker(__urlBuilder(this.blob));
+    obj.shell = new Worker(window.URL.createObjectURL(obj.blob));
   }
 
   /**
-   * Extend an object
+   * defines how a variable is defined in the web worker
    *
-   * @memberof $worker
+   * @param {string} name - the variable name
    *
-   * @param {Object} target
-   * @param {Object} src
+   * @return {string}
    *
    * @private
    */
-  function __extend(target, src) {
+  function _makeVarName(name) {
+    return 'self.' + name + ' = ';
+  }
+
+  /**
+   * Extends an object
+   *
+   * @param {object} target - the object to be added to
+   * @param {object} src - the object to add to the target
+   *
+   * @return {object} - returns the target with the src properties added
+   *
+   * @private
+   */
+  function _extend(target, src) {
     for (var key in src) {
       if (src.hasOwnProperty(key)) {
         target[key] = src[key]
@@ -268,25 +161,78 @@ function $worker() {
   }
 
   /**
-   * @memberof $worker
+   * sends the message data to the web worker
    *
-   * @param name
-   *
-   * @return {String}
+   * @param {object} worker - the web worker to act on
+   * @param {string|number|object|array} data - the data to send to the worker
    *
    * @private
    */
-  function __makeVarName(name) {
-    return 'self.' + name + ' = ';
+  function _postMessage(worker, data) {
+    data = data || {};
+
+    var postMessageData = _extend({
+      _src: window.location.protocol + '//' + window.location.host
+    }, data);
+
+    worker.shell.postMessage(postMessageData);
   }
 
-  /* Expose public methods */
   return {
-    create     : create,
-    extend     : extend,
-    postMessage: postMessage,
-    terminate  : terminate,
-    list       : list
-  };
+    create: function (method) {
+      var obj = Object.create(_worker);
 
+      obj.blobArray = ['self.onmessage = ', method.toString(), ';'];
+
+      _createWebWorker(obj);
+
+      _workers.push(obj);
+
+      return obj;
+    },
+
+    success: function (fn) {
+      _workers.forEach(function (current) {
+        current.shell.onmessage = fn;
+      });
+
+      return this;
+    },
+
+    error: function (fn) {
+      _workers.forEach(function (current) {
+        current.shell.onerror = fn;
+      });
+
+      return this;
+    },
+
+    extend: function (obj) {
+      _extend(_worker, obj);
+
+      return this;
+    },
+
+    run: function (data) {
+      _workers.forEach(function (current) {
+        _postMessage(current, data);
+      });
+
+      return this;
+    },
+
+    terminate: function () {
+      _workers.forEach(function (current) {
+        current.shell.terminate();
+      });
+
+      _workers.length = 0;
+
+      return this;
+    },
+
+    list: function() {
+      return _workers;
+    }
+  }
 }

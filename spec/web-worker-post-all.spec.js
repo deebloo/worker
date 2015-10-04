@@ -14,13 +14,13 @@ describe('web-worker', function() {
       self.postMessage(foo);
     });
 
-    myWorker.onmessage = function(res) {
+    myWorker.success(function(res) {
       result = res.data;
 
       done();
-    };
+    });
 
-    workers.postMessage({length: 1024, min: 0, max: 9999});
+    workers.run({length: 1024, min: 0, max: 9999});
   });
 
   afterEach(function() {
