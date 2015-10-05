@@ -130,18 +130,19 @@ NOTE: anything other then functions should be passed in with postMessage
 
 ```JS
 
-$worker().create(() => {
-  var hello = hello();
-  var goodbye = goodbye();
-})
-.loadScripts({
-  hello: function() {
-    return 'hello';
-  }, 
-  goodbye: function() {
-    return 'goodbye';
-  }
-});
+$worker()
+  .create(() => {
+    var hello = self.hello();
+    var goodbye = self.goodbye();
+  })
+  .loadScripts({
+    hello: function() {
+      return 'hello';
+    }, 
+    goodbye: function() {
+      return 'goodbye';
+    }
+  });
 ```
 
 #### $worker().create().removeScripts()
@@ -176,7 +177,7 @@ var myWorker = group.create(e => {
 .success(res => results = res.data)
 .error(err => throw new Error());
 
-myWorker.postMessage({length: 1024, min: 0, max: 9999});
+myWorker.run({length: 1024, min: 0, max: 9999});
 ```
 
 
