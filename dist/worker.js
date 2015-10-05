@@ -179,6 +179,13 @@ function $worker() {
   }
 
   return {
+    /**
+     * create a new worker
+     *
+     * @param {function} method - the function to run when the web worker is triggered
+     *
+     * @return {Object}
+     */
     create: function (method) {
       var obj = Object.create(_worker);
 
@@ -191,6 +198,13 @@ function $worker() {
       return obj;
     },
 
+    /**
+     * success method for all workers belonging to the 'group'
+     *
+     * @param {function} fn - the success method to run
+     *
+     * @return {success}
+     */
     success: function (fn) {
       _workers.forEach(function (current) {
         current.shell.onmessage = fn;
@@ -199,6 +213,13 @@ function $worker() {
       return this;
     },
 
+    /**
+     * error method to run for all workers belonging to the 'group'
+     *
+     * @param {function} fn - the error method to run
+     *
+     * @return {error}
+     */
     error: function (fn) {
       _workers.forEach(function (current) {
         current.shell.onerror = fn;
@@ -207,12 +228,26 @@ function $worker() {
       return this;
     },
 
+    /**
+     * extend the prototype for all workers in a given group
+     *
+     * @param {object} obj
+     *
+     * @return {extend}
+     */
     extend: function (obj) {
       _extend(_worker, obj);
 
       return this;
     },
 
+    /**
+     * run all workers in a certain group
+     *
+     * @param {string|number|object|array} data - the data to pass to the worker
+     *
+     * @return {run}
+     */
     run: function (data) {
       _workers.forEach(function (current) {
         _postMessage(current, data);
@@ -221,6 +256,11 @@ function $worker() {
       return this;
     },
 
+    /**
+     * terminate all workers in the group
+     *
+     * @return {terminate}
+     */
     terminate: function () {
       _workers.forEach(function (current) {
         current.shell.terminate();
@@ -231,6 +271,11 @@ function $worker() {
       return this;
     },
 
+    /**
+     * Returns a list of all workers in the group
+     *
+     * @return {Array}
+     */
     list: function() {
       return _workers;
     }
