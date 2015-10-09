@@ -16,7 +16,7 @@ bower install --save worker
 
 ```JS
 $worker()
-  .create((e) => {
+  .create(e => {
     var sum = 0;
     
     e.data.forEach(function(int) {
