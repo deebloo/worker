@@ -173,11 +173,13 @@ var myWorker = group.create(e => {
 })
 .loadScripts({
   'hello': () => console.log('yay')
-})
-.success(res => results = res.data)
-.error(err => throw new Error());
+});
 
-myWorker.run({length: 1024, min: 0, max: 9999});
+// run|success|error can be assigned used similar to a promise syntax
+myWorker
+  .run({length: 1024, min: 0, max: 9999})
+  .success(res => results = res.data)
+  .error(err => throw new Error());
 ```
 
 
