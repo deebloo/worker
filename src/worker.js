@@ -11,11 +11,15 @@
  * No problem. All workers inherit from the same object so you can make changes across the board
  */
 function $worker() {
-  var _workers = [];
+  var _workers = [], _workersSuccess = [], _workersError = [];
 
   var _worker = {
     // The actual web worker
     shell: {},
+
+    successMethods: [],
+
+    errorMethods: [],
 
     // The array to be used to create a blob
     blobArray: [],
@@ -41,7 +45,7 @@ function $worker() {
      * @return {_worker}
      */
     success: function (fn) {
-      this.shell.onmessage = fn;
+      this.successMethods.push(fn);
 
       return this;
     },
@@ -54,7 +58,7 @@ function $worker() {
      * @return {_worker}
      */
     error: function (fn) {
-      this.shell.onerror = fn;
+      this.errorMethods.push(fn);
 
       return this;
     },
@@ -125,6 +129,22 @@ function $worker() {
     obj.blob = new Blob(obj.blobArray, {type: 'text/javascript'});
 
     obj.shell = new Worker(window.URL.createObjectURL(obj.blob));
+
+    obj.shell.onmessage = function (e) {
+      _workersSuccess
+        .concat(obj.successMethods)
+        .forEach(function (method) {
+          method(e);
+        });
+    };
+
+    obj.shell.error = function (e) {
+      _workersError
+        .concat(obj.errorMethods)
+        .forEach(function (method) {
+          method(e);
+        });
+    };
   }
 
   /**
@@ -171,11 +191,7 @@ function $worker() {
   function _postMessage(worker, data) {
     data = data || {};
 
-    var postMessageData = _extend({
-      _src: window.location.protocol + '//' + window.location.host
-    }, data);
-
-    worker.shell.postMessage(postMessageData);
+    worker.shell.postMessage(data);
   }
 
   return {
@@ -206,9 +222,7 @@ function $worker() {
      * @return {success}
      */
     success: function (fn) {
-      _workers.forEach(function (current) {
-        current.shell.onmessage = fn;
-      });
+      _workersSuccess.push(fn);
 
       return this;
     },
@@ -221,9 +235,7 @@ function $worker() {
      * @return {error}
      */
     error: function (fn) {
-      _workers.forEach(function (current) {
-        current.shell.onerror = fn;
-      });
+      _workersError.push(fn);
 
       return this;
     },
@@ -276,7 +288,7 @@ function $worker() {
      *
      * @return {Array}
      */
-    list: function() {
+    list: function () {
       return _workers;
     }
   }

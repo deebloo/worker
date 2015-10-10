@@ -8,35 +8,23 @@
     <h1>Look In The Console</h1>
 		<script src="src/worker.js"></script>
 		<script>
-      // Create worker instance
-      var workers = $worker()
-        .extend({
-          foo: true,
-          hello: 'world'
+      var workers = $worker().success(function (e) {
+        console.log('initial', e.data);
+      });
+
+      var worker = workers
+        .create(function (e) {
+          self.postMessage(e.data);
         })
-        .success(function (e) {
-          console.log(e.data);
+        .success(function (res) {
+          console.log('first', res.data);
         });
 
-      // create web worker from worker instance
-      var worker1 = workers.create(function(e) {
-        console.log(e);
-
-        self.postMessage('Hello World');
-      });
-
-      // create another web worker from worker instance
-      var worker2 = workers.create(function() {
-        self.postMessage('Goodbye World');
-      });
-
-      workers.extend({
-        bar: true
-      });
-
-      console.log(worker1);
-
-      workers.run();
+      worker
+        .run('Hello World')
+        .success(function (res) {
+          console.log('second', res.data);
+        });
 		</script>
 	</body>
 </html>

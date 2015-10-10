@@ -9,7 +9,6 @@
  *
  * @example node ./up-version patch
  */
-
 var fs = require('fs');
 
 var files = {
