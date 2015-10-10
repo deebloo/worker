@@ -10,10 +10,7 @@ describe('web-worker', function() {
           foo.push(Math.floor(Math.random() * (max - min)) + min);
         }
 
-        self.postMessage({
-          array: foo,
-          url: e.data._src
-        });
+        self.postMessage(foo);
       })
       .success(function (res) {
         result = res.data;
@@ -31,8 +28,6 @@ describe('web-worker', function() {
   });
 
   it('should create a big array', function() {
-    expect(result.array.length).toBe(1024);
-
-    expect(result.url).toBe('http://localhost:14523');
+    expect(result.length).toBe(1024);
   });
 });
