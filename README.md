@@ -157,7 +157,8 @@ var myWorker = $worker().create( ... );
 
 myWorker.removeScripts('hello', 'goodbye');
 ```
-
+#### Support
+Chome, Firefox, Safari, and IE11+
 
 #### Complete Example
 ```JS
