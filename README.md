@@ -165,20 +165,20 @@ Chome, Firefox, Safari, and IE11+
 // A group of web workers
 var group = $worker();
 
-var myWorker = group.create(e => {
-  var foo = [], min = e.data.min, max = e.data.max;
-  
-  e.data.length.forEach(() => foo.push(Math.floor(Math.random()*(max-min))+min));
-  self.hello();
-  self.postMessage(foo);
-})
-.loadScripts({
-  'hello': () => console.log('yay')
-});
+var myWorker = group
+  .create(e => {
+    let total = 0;
+    e.data.forEach(val => total += val);
+    self.hello();
+    self.postMessage(foo);
+  })
+  .loadScripts({
+    'hello': () => console.log('yay')
+  });
 
 // run|success|error can be assigned used similar to a promise syntax
 myWorker
-  .run({length: 1024, min: 0, max: 9999})
+  .run(...workerData)
   .success(res => results = res.data)
   .error(err => throw new Error());
 ```
