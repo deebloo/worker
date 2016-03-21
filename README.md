@@ -17,13 +17,11 @@ bower install --save worker
 ```JS
 $worker()
   .create(e => {
-    var sum = 0;
-    
-    e.data.forEach(function(int) {
+    self.postMessage(e.data.reduce((sum, int) => {
       sum += int;
-    });
-    
-    self.postMessage(sum);
+      
+      return sum;
+    }, 0));
   })
   .success(data => console.log(data))
   .error(err => console.error(err))
