@@ -1,4 +1,4 @@
-# worker [![CircleCI](https://circleci.com/gh/deebloo/worker.svg?style=svg)](https://circleci.com/gh/deebloo/worker)
+# $worker [![CircleCI](https://circleci.com/gh/deebloo/worker.svg?style=svg)](https://circleci.com/gh/deebloo/worker)
 
 A tiny library to help make using web workers easier. (>1k)
 
@@ -22,7 +22,7 @@ npm i es6-shim --save
 
 ```JS
 // if using webpack/browserify
-var $worker = require('$worker');
+var $worker = require('web-worker');
 
 // if using as global
 var $worker = window.$worker;

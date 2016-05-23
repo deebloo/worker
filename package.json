@@ -1,5 +1,5 @@
 {
-  "name": "$worker",
+  "name": "web-worker",
   "version": "1.0.1",
   "description": "A tiny library to help make using web workers easier. (>1k)",
   "main": "src/worker.js",
