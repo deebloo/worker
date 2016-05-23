@@ -9,10 +9,15 @@ describe('web-worker', function () {
                 return sum += int;
             }, 0));
         }
+        
+        function subtract(e) {
+            self.postMessage(e.data.reduce(function (sum, int) {
+                return sum -= int;
+            }, 0));
+        }
 
         workers.create(add);
-
-        workers.create(add);
+        workers.create(subtract);
     });
 
     afterEach(function () {
@@ -27,7 +32,7 @@ describe('web-worker', function () {
                     return sum += item.data;
                 }, 0);
 
-                expect(total).toBe(110);
+                expect(total).toBe(0);
                 
                 done();
             });
