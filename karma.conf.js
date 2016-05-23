@@ -8,7 +8,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'node_modules/es6-promise/dist/es6-promise.js',
-      './dist/worker.js',
+      './src/worker.js',
       './spec/*.spec.js'
     ],
 

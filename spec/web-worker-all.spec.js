@@ -28,8 +28,12 @@ describe('web-worker', function () {
                 }, 0);
 
                 expect(total).toBe(110);
-
+                
                 done();
             });
+    });
+    
+    it('should return a list with a length of 2', function () {
+        expect(workers.list().length).toBe(2);
     });
 });
