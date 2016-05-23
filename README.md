@@ -51,19 +51,6 @@ function helloWorld() {
 var myWorker = $worker().create(helloWorld);
 ```
 
-#### $worker().list()
-Returns a list of all of the created workers
-
-Example:
-```JS
-var workerGroup = $worker();
-
-workerGroup.create( ... );
-workerGroup.create( ... );
-
-workerGroup.list().length === 2
-```
-
 #### $worker().create().run()
 Post data for the web worker to use. Runs the web worker and returns a promise;
 
@@ -81,4 +68,17 @@ $worker()
   .then(function (e) {
       console.log(e.data) // HELLO WORLD
   });
+```
+
+#### $worker().list()
+Returns a list of all of the created workers
+
+Example:
+```JS
+var workerGroup = $worker();
+
+workerGroup.create( ... );
+workerGroup.create( ... );
+
+workerGroup.list().length === 2
 ```

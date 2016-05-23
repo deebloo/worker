@@ -33,6 +33,8 @@
          * run all of the workers in the array and resolve all
          */
         function runAll(data) {
+            data = data || {};
+            
             var promises = workers.map(function (worker) {
                 return worker.run(data);
             });
@@ -72,6 +74,8 @@
 
                 // run the web worker
                 run: function (data) {
+                    data = data || {};
+                    
                     return __run(this._shell, data);
                 },
 
