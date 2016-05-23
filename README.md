@@ -1,6 +1,6 @@
 # worker [![CircleCI](https://circleci.com/gh/deebloo/worker.svg?style=svg)](https://circleci.com/gh/deebloo/worker)
 
-A tiny library to help make using web workers easier.
+A tiny library to help make using web workers easier. (>1k)
 
 For more info on web workers look [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
 
