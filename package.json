@@ -10,13 +10,14 @@
     "uglify": "uglifyjs ./src/worker.js -o ./dist/worker.min.js --compress --mangle"
   },
   "files": [
-    "dist"
+    "dist/worker.min.js",
+    "src/worker.js"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/deebloo/workers.git"
   },
-  "author": "",
+  "author": "deebloo",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/deebloo/workers/issues"
@@ -34,9 +35,6 @@
     "uglifyjs": "*"
   },
   "peerDependencies": {
-    "es6-promise": "^3.2.1"
-  },
-  "dependencies": {
     "es6-promise": "^3.2.1"
   }
 }
