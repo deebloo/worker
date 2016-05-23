@@ -27,10 +27,12 @@ var $worker = require('@deebloo/worker');
 // if using as global
 var $worker = window.$worker;
 
+// pass in a function to be run in a separate thread
 var myWorker = $worker().create(function () {
     self.postMessage('Hello World');
 });
 
+// run the worker respond to the promise
 myWorker.run().then(function (e) {
     console.log(e.data); // 'Hello World'
 });
