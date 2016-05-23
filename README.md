@@ -13,6 +13,11 @@ npm i worker --save
 #### Support
 Chome, Firefox, Safari, and IE11+
 
+Uses ES6 promises. If using browser that does not have native support.
+```
+npm i es6-shim --save
+```
+
 ### Basic Usage
 
 ```JS

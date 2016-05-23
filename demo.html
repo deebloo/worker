@@ -1,37 +1,40 @@
 <!doctype html>
-<html>
-	<head>
-		<title>web worker example</title>
-	</head>
 
-	<body>
-    <h1>Look In The Console</h1>
-		<script src="src/worker-new.js"></script>
-		<script>
-      var workers = $worker();
+<html>
+    <head>
+      < title>web worker example</title>
+    </head>
+
+    <body>
+      <h1>Look In The Console</h1>
       
-      var worker1 = workers.create(function (e) {
-        self.postMessage(e.data);
-      });
+      <script src="src/worker.js"></script>
       
-      var worker2 = workers.create(function (e) {
-        self.postMessage(e.data);
-      });
-      
-      var worker3 = workers.create(function (e) {
-        self.postMessage(e.data);
-      });
-      
-      workers
-        .runAll('Hello World')
-        .then(function (e) {
-          return e.map(function (evt) {
-            return evt.data;
+      <script>
+          var workers = $worker();
+          
+          var worker1 = workers.create(function (e) {
+              self.postMessage(e.data);
           });
-        })
-        .then(function (e) {
-          console.log(e);
-        });
-		</script>
-	</body>
+          
+          var worker2 = workers.create(function (e) {
+              self.postMessage(e.data);
+          });
+          
+          var worker3 = workers.create(function (e) {
+              self.postMessage(e.data);
+          });
+          
+          workers
+              .runAll('Hello World')
+              .then(function (e) {
+                return e.map(function (evt) {
+                  return evt.data;
+                });
+              })
+              .then(function (e) {
+                console.log(e);
+              });
+      </script>
+    </body>
 </html>
