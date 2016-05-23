@@ -1,14 +1,18 @@
 {
   "name": "worker",
   "version": "1.0.0",
-  "description": "a tiny micro library to make using web workers easier",
+  "description": "A tiny library to help make using web workers easier. (>1k)",
   "main": "src/worker.js",
   "scripts": {
-    "update": "build-scripts/update.sh",
     "docs": "node node_modules/jsdoc/jsdoc.js src/ -d docs -r README.md",
     "test": "karma start",
     "uglify": "uglifyjs ./src/worker.js -o ./dist/worker.min.js --compress --mangle"
   },
+  "keywords": [
+    "web workers",
+    "multithread",
+    "promises"
+  ],
   "files": [
     "dist/worker.min.js",
     "src/worker.js"
@@ -25,7 +29,6 @@
   "homepage": "https://github.com/deebloo/workers",
   "devDependencies": {
     "jasmine-core": "*",
-    "jsdoc": "*",
     "karma": "*",
     "karma-coverage": "*",
     "karma-jasmine": "*",
