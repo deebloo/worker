@@ -1,33 +1,24 @@
-describe('web-worker', function() {
-  var myWorker, result;
+describe('web-worker', function () {
+    var myWorker;
 
-  beforeEach(function(done) {
-    myWorker = $worker()
-      .create(function(e) {
-        var foo = [], min = e.data.min, max = e.data.max;
+    beforeEach(function () {
+        myWorker = $worker().create(function (e) {
+            self.postMessage(e.data.reduce(function (sum, int) {
+                return sum += int;
+            }, 0));
+        });
+    });
 
-        for (var i = 0; i < e.data.length; i++) {
-          foo.push(Math.floor(Math.random() * (max - min)) + min);
-        }
+    afterEach(function () {
+        myWorker.terminate();
+    });
 
-        self.postMessage(foo);
-      })
-      .success(function (res) {
-        result = res.data;
-
-        done();
-      })
-      .error(function () {
-        done();
-      })
-      .run({length: 1024, min: 0, max: 9999});
-  });
-
-  afterEach(function() {
-    myWorker.terminate();
-  });
-
-  it('should create a big array', function() {
-    expect(result.length).toBe(1024);
-  });
+    it('should create a big array', function (done) {
+        myWorker
+            .run([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+            .then(function (e) {
+                expect(e.data).toBe(55);
+                done();
+            });
+    });
 });

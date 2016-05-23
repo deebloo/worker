@@ -6,24 +6,31 @@
 
 	<body>
     <h1>Look In The Console</h1>
-		<script src="src/worker.js"></script>
+		<script src="src/worker-new.js"></script>
 		<script>
-      var workers = $worker().success(function (e) {
-        console.log('initial', e.data);
+      var workers = $worker();
+      
+      var worker1 = workers.create(function (e) {
+        self.postMessage(e.data);
       });
-
-      var worker = workers
-        .create(function (e) {
-          self.postMessage(e.data);
+      
+      var worker2 = workers.create(function (e) {
+        self.postMessage(e.data);
+      });
+      
+      var worker3 = workers.create(function (e) {
+        self.postMessage(e.data);
+      });
+      
+      workers
+        .runAll('Hello World')
+        .then(function (e) {
+          return e.map(function (evt) {
+            return evt.data;
+          });
         })
-        .success(function (res) {
-          console.log('first', res.data);
-        });
-
-      worker
-        .run('Hello World')
-        .success(function (res) {
-          console.log('second', res.data);
+        .then(function (e) {
+          console.log(e);
         });
 		</script>
 	</body>

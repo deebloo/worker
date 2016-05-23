@@ -7,6 +7,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/es6-promise/dist/es6-promise.js',
       './src/worker.js',
       './spec/*.spec.js'
     ],
@@ -25,7 +26,7 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['PhantomJS'],
 
     reporters: ['coverage', 'progress'],
 
