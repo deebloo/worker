@@ -16,6 +16,12 @@ Chome, Firefox, Safari, and IE11+
 ### Basic Usage
 
 ```JS
+// if using webpack/browserify
+var $worker = require('$worker');
+
+// if using as global
+var $worker = window.$worker;
+
 var myWorker = $worker().create(function () {
     self.postMessage('Hello World');
 });
