@@ -1,12 +1,12 @@
 interface $worker {
-    created(): worker;
-    runAll(data?): any;
+    create(fn: Function): Worker;
+    runAll(data?): PromiseLike<any>;
     terminateAll(): void;
     list(): any;
 }
 
-interface worker {
-    run(data?): this,
+export interface Worker {
+    run(data?): PromiseLike<any>,
     terminate(): void;
 }
 
