@@ -49,7 +49,7 @@
          */
         function terminateAll() {
             workers.forEach(function (worker) {
-                worker.terminate();
+                worker._shell.terminate();
             });
 
             workers.length = 0;
@@ -83,7 +83,7 @@
 
                 // terminate the web worker
                 terminate: function () {
-                    return __terminate(this._shell);
+                    return __terminate(this);
                 }
             };
         }
@@ -106,10 +106,10 @@
         /**
          * terminate the web worker;
          */
-        function __terminate(worker) {
-            workers.splice(workers.indexOf(worker), 1);
+        function __terminate(ref) {
+            workers.splice(workers.indexOf(ref), 1);
 
-            return worker.terminate();
+            return ref._shell.terminate();
         }
     }
 })();
