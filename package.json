@@ -1,6 +1,6 @@
 {
   "name": "@deebloo/worker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A tiny library to help make using web workers easier. (>1k)",
   "main": "src/worker.js",
   "scripts": {
@@ -15,7 +15,8 @@
   ],
   "files": [
     "dist/worker.min.js",
-    "src/worker.js"
+    "src/worker.js",
+    "src/worker.d.ts"
   ],
   "repository": {
     "type": "git",
