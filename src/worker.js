@@ -1,5 +1,3 @@
-/// <reference path="worker.d.ts"/>
-
 (function () {
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = $worker;

@@ -9,3 +9,5 @@ interface worker {
     run(data?): this,
     terminate(): void;
 }
+
+export declare function $worker(): $worker;
