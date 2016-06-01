@@ -92,7 +92,6 @@
 
             var promise = new Promise(function (resolve, reject) {
                 worker.onmessage = resolve;
-
                 worker.onerror = reject;
             });
 

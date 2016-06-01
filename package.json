@@ -38,8 +38,5 @@
     "karma-safari-launcher": "*",
     "phantomjs-prebuilt": "^2.1.7",
     "uglifyjs": "*"
-  },
-  "peerDependencies": {
-    "es6-promise": "^3.2.1"
   }
 }
