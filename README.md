@@ -83,6 +83,28 @@ $worker()
   });
 ```
 
+#### $worker().runAll()
+Run all workers in a group. resolves promise when all workers are successful.
+
+| Arg     | Type    | description |
+| --------|---------|-------|
+| data  | * | the data to be posted (cannot be function)  |
+
+Example:
+```JS
+var workerGroup = $worker();
+
+workerGroup.create( ... );
+workerGroup.create( ... );
+
+workerGroup
+    .runAll([...data])
+    .then(function () {
+        ... do stuff
+    });
+```
+
+
 #### $worker().list()
 Returns a list of all of the created workers
 
