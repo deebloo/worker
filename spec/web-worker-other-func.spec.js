@@ -3,14 +3,10 @@ describe('web-worker', function () {
 
     beforeEach(function () {
         function workerFunc() {
-            self.postMessage(foo());
+            self.postMessage('Hello World');
         }
 
-        function otherFunc() {
-            return 'Hello World';
-        }
-
-        myWorker = $worker().create(workerFunc, 'self.otherFunc = ', otherFunc);
+        myWorker = $worker().create(workerFunc);
     });
 
     afterEach(function () {
