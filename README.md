@@ -13,9 +13,9 @@ npm i @deebloo/worker --save
 #### Support
 Chome, Firefox, Safari, and IE11+
 
-Uses ES6 promises. If using browser that does not have native support.
+takes advantage of promises, if running in browser with no native support use shim.
 ```
-npm i es6-shim --save
+npm i es6-promise --save
 ```
 
 ### Basic Usage

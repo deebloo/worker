@@ -2,9 +2,9 @@
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = $worker;
     } else {
-        window.$worker = $worker;   
+        window.$worker = $worker;
     }
-    
+
     function $worker() {
         var workers = [];
 
@@ -18,11 +18,11 @@
 
         /**
          * create a new worker instance and saves it to the list
-         * 
-         * @param {Function} fn - the function to run in the worker 
+         *
+         * @param {Function} fn - the function to run in the worker
          */
         function create(fn) {
-            var newWorker = _createWorker(fn);
+            var newWorker = _createWorker.apply(null, arguments);
 
             workers.push(newWorker);
 
@@ -50,7 +50,7 @@
 
             workers.length = 0;
         }
-        
+
         /**
          * returns the list of current workers
          */
@@ -60,7 +60,7 @@
 
         /**
          * Create an actual web worker from an object url from a blob
-         * 
+         *
          * @param {Function} fn - the function to be put into the blog array.
          */
         function _createWorker(fn) {
@@ -87,7 +87,7 @@
          */
         function __run(worker, data) {
             data = data || {};
-            
+
             worker.postMessage(data);
 
             var promise = new Promise(function (resolve, reject) {

@@ -2,7 +2,13 @@ describe('web-worker', function () {
     var myWorker;
 
     beforeEach(function () {
+        function foo() {
+            
+        }
+        
         myWorker = $worker().create(function (e) {
+            var foo = foo;
+            
             self.postMessage(e.data.reduce(function (sum, int) {
                 return sum += int;
             }, 0));
