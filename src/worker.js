@@ -64,11 +64,18 @@
          * @param {Function} fn - the function to be put into the blog array.
          */
         function _createWorker(fn) {
-            var blob = new Blob(['self.onmessage = ', fn], { type: 'text/javascript' });
+            var blob = new Blob(['self.onmessage = ', fn.toString()], { type: 'text/javascript' });
+            var url = URL.createObjectURL(blob);
 
             return {
                 // the web worker instance
-                _shell: new Worker(window.URL.createObjectURL(blob)),
+                _shell: (function () {
+                    var worker = new Worker(url);
+
+                    URL.revokeObjectURL(url);
+
+                    return worker;
+                })(),
 
                 // run the web worker
                 run: function (data) {
