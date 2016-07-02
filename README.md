@@ -7,7 +7,7 @@ For more info on web workers look [here](https://developer.mozilla.org/en-US/doc
 ### Install
 
 ```
-npm i @deebloo/worker --save
+npm i inline-web-worker --save
 ```
 
 #### Support
@@ -22,7 +22,7 @@ npm i es6-promise --save
 
 ```JS
 // if using webpack/browserify
-var $worker = require('inline-worker');
+var $worker = require('inline-web-worker');
 
 // if using as global
 var $worker = window.$worker;
