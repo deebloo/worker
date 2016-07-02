@@ -21,7 +21,7 @@
          *
          * @param {Function} fn - the function to run in the worker
          */
-        function create(fn) {
+        function create(fn, otherScripts) {
             var newWorker = _createWorker.apply(null, arguments);
 
             workers.push(newWorker);
