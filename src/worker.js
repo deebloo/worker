@@ -67,7 +67,7 @@
             otherScripts = otherScripts || [];
 
             var blobArray = otherScripts.map(function (script) {
-                return 'self.' + script.name + '=' + script.method.toString() + ';';
+                return 'self.' + script.name + '=' + script.value.toString() + ';';
             });
             blobArray = blobArray.concat(['self.onmessage=', fn.toString(), ';']);
 

@@ -9,7 +9,7 @@ describe('web-worker', function () {
         var scriptMap = [
             {
                 name: 'foo',
-                method: function () {
+                value: function () {
                     return 'Hello World';
                 }
             }
