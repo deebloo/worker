@@ -22,7 +22,7 @@ npm i es6-promise --save
 
 ```JS
 // if using webpack/browserify
-var $worker = require('@deebloo/worker');
+var $worker = require('inline-worker');
 
 // if using as global
 var $worker = window.$worker;

@@ -1,6 +1,6 @@
 {
   "name": "inline-worker",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A tiny library to help make using web workers easier. (>1k)",
   "main": "src/worker.js",
   "scripts": {
