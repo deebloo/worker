@@ -65,11 +65,13 @@
          */
         function _createWorker(fn, otherScripts) {
             otherScripts = otherScripts || [];
+
             var blobArray = otherScripts.map(function (script) {
                 return 'self.' + script.name + '=' + script.method.toString() + ';';
             });
+            blobArray = blobArray.concat(['self.onmessage=', fn.toString(), ';']);
 
-            var blob = new Blob(blobArray.concat(['self.onmessage=', fn.toString(), ';']), { type: 'text/javascript' });
+            var blob = new Blob(blobArray, { type: 'text/javascript' });
             var url = URL.createObjectURL(blob);
 
             return {
@@ -77,7 +79,7 @@
                 _shell: (function () {
                     var worker = new Worker(url);
 
-                    //URL.revokeObjectURL(url);
+                    URL.revokeObjectURL(url);
 
                     return worker;
                 })(),
