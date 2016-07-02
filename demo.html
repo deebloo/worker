@@ -15,7 +15,14 @@
           
           var worker1 = workers.create(function (e) {
               self.postMessage(e.data);
-          });
+          }, [
+            {
+              name: 'foo',
+              method: function () {
+                return 'Hello World';
+              }
+            }
+          ]);
           
           var worker2 = workers.create(function (e) {
               self.postMessage(e.data);

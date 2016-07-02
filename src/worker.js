@@ -63,8 +63,13 @@
          *
          * @param {Function} fn - the function to be put into the blog array.
          */
-        function _createWorker(fn) {
-            var blob = new Blob(['self.onmessage = ', fn.toString()], { type: 'text/javascript' });
+        function _createWorker(fn, otherScripts) {
+            otherScripts = otherScripts || [];
+            var blobArray = otherScripts.map(function (script) {
+                return 'self.' + script.name + '=' + script.method.toString() + ';';
+            });
+
+            var blob = new Blob(blobArray.concat(['self.onmessage=', fn.toString(), ';']), { type: 'text/javascript' });
             var url = URL.createObjectURL(blob);
 
             return {
@@ -72,7 +77,7 @@
                 _shell: (function () {
                     var worker = new Worker(url);
 
-                    URL.revokeObjectURL(url);
+                    //URL.revokeObjectURL(url);
 
                     return worker;
                 })(),
