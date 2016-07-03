@@ -7,7 +7,7 @@ For more info on web workers look [here](https://developer.mozilla.org/en-US/doc
 ### Install
 
 ```
-npm i @deebloo/worker --save
+npm i inline-web-worker --save
 ```
 
 #### Support
@@ -22,7 +22,7 @@ npm i es6-promise --save
 
 ```JS
 // if using webpack/browserify
-var $worker = require('@deebloo/worker');
+var $worker = require('inline-web-worker');
 
 // if using as global
 var $worker = window.$worker;
@@ -82,6 +82,28 @@ $worker()
       console.log(e.data) // HELLO WORLD
   });
 ```
+
+#### $worker().runAll()
+Run all workers in a group. resolves promise when all workers are successful.
+
+| Arg     | Type    | description |
+| --------|---------|-------|
+| data  | * | the data to be posted (cannot be function)  |
+
+Example:
+```JS
+var workerGroup = $worker();
+
+workerGroup.create( ... );
+workerGroup.create( ... );
+
+workerGroup
+    .runAll([...data])
+    .then(function () {
+        ... do stuff
+    });
+```
+
 
 #### $worker().list()
 Returns a list of all of the created workers

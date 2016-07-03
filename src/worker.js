@@ -21,7 +21,7 @@
          *
          * @param {Function} fn - the function to run in the worker
          */
-        function create(fn) {
+        function create(fn, otherScripts) {
             var newWorker = _createWorker.apply(null, arguments);
 
             workers.push(newWorker);
@@ -63,12 +63,26 @@
          *
          * @param {Function} fn - the function to be put into the blog array.
          */
-        function _createWorker(fn) {
-            var blob = new Blob(['self.onmessage = ', fn], { type: 'text/javascript' });
+        function _createWorker(fn, otherScripts) {
+            otherScripts = otherScripts || [];
+
+            var blobArray = otherScripts.map(function (script) {
+                return 'self.' + script.name + '=' + script.value.toString() + ';';
+            });
+            blobArray = blobArray.concat(['self.onmessage=', fn.toString(), ';']);
+
+            var blob = new Blob(blobArray, { type: 'text/javascript' });
+            var url = URL.createObjectURL(blob);
 
             return {
                 // the web worker instance
-                _shell: new Worker(window.URL.createObjectURL(blob)),
+                _shell: (function () {
+                    var worker = new Worker(url);
+
+                    URL.revokeObjectURL(url);
+
+                    return worker;
+                })(),
 
                 // run the web worker
                 run: function (data) {
