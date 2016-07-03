@@ -78,6 +78,16 @@
                 // terminate the web worker
                 terminate: function () {
                     return __terminate(this);
+                },
+
+                // subscribe to the worker
+                subscribe: function (fn) {
+                    this._shell.addEventListener('message', fn);
+                },
+
+                // ubsubscribe from the worker
+                unsubscribe: function (fn) {
+                    this._shell.removeEventListener('message', fn);
                 }
             };
         }
