@@ -1,4 +1,4 @@
-# $worker [![CircleCI](https://circleci.com/gh/deebloo/worker.svg?style=svg)](https://circleci.com/gh/deebloo/worker)
+# $worker
 
 A tiny library to help make using web workers easier. (>1k)
 
