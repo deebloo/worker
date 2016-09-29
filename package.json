@@ -1,6 +1,7 @@
 {
   "name": "inline-web-worker",
   "version": "1.1.0",
+  "license": "MIT",
   "description": "A tiny library to help make using web workers easier. (>1k)",
   "main": "src/worker.js",
   "scripts": {
@@ -24,7 +25,6 @@
     "url": "https://github.com/deebloo/workers.git"
   },
   "author": "deebloo",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/deebloo/workers/issues"
   },
@@ -39,4 +39,5 @@
     "phantomjs-prebuilt": "^2.1.7",
     "uglifyjs": "*"
   }
+
 }
