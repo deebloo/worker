@@ -1,5 +1,5 @@
 interface $worker {
-    create(fn: Function): Worker;
+    create(fn: Function, otherScripts?: [{name: string, method: Function}]): Worker;
     runAll(data?): PromiseLike<any>;
     terminateAll(): void;
     list(): any;

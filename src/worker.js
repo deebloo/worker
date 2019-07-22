@@ -20,6 +20,7 @@
          * create a new worker instance and saves it to the list
          *
          * @param {Function} fn - the function to run in the worker
+         * @param {[{name: string, method: Function}} - a list of other functions to be available inside the worker function
          */
         function create(fn, otherScripts) {
             var newWorker = _createWorker.apply(null, arguments);
@@ -62,6 +63,7 @@
          * Create an actual web worker from an object url from a blob
          *
          * @param {Function} fn - the function to be put into the blog array.
+         * @param {[{name: string, method: Function}} - a list of other functions to be available inside the worker function
          */
         function _createWorker(fn, otherScripts) {
             otherScripts = otherScripts || [];
