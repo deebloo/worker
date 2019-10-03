@@ -13,15 +13,9 @@ npm i inline-web-worker --save
 #### Support
 Chome, Firefox, Safari, and IE11+
 
-takes advantage of promises, if running in browser with no native support use shim.
-```
-npm i es6-promise --save
-```
-
 ### Basic Usage
 
 ```JS
-// if using webpack/browserify
 var $worker = require('inline-web-worker');
 
 // if using as global
